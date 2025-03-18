@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/tools/navigators.dart';
 import 'package:mobile/tools/token_handler.dart';
@@ -19,17 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
-
-  // Google Sign In
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: "272960024081-d0444heb9osh8u3pq1vhea5qca8qfr6h.apps.googleusercontent.com",
-    scopes: [
-      'email',
-      'profile',
-      'openid'
-    ],
-
-  );
 
   @override
   void dispose() {
