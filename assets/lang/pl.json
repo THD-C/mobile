@@ -1,3 +1,11 @@
 {
-  "welcome": "Witam"
+  "welcome": "Witam",
+  "login_app_bar": "Logowanie",
+  "login_email_login": "Email lub login",
+  "login_no_login": "Proszę wprowadzić email lub login",
+  "login_password": "Hasło",
+  "login_no_password": "Proszę wprowadzić hasło",
+  "login_button": "Zaloguj się",
+  "no_account": "Nie masz jeszcze konta?",
+  "register_link": "Zarejestruj się"
 }
