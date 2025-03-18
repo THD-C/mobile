@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/tools/navigators.dart';
 import 'package:mobile/tools/token_handler.dart';
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Logowanie'),
+        title: Text(AppLocalizations.of(context).translate("login_app_bar")),
         centerTitle: true,
       ),
       body: Padding(
@@ -108,15 +109,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Pole email/login
                 TextFormField(
                   controller: _loginController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email lub login',
+                  decoration:  InputDecoration(
+                    labelText: AppLocalizations.of(context).translate("login_email_login"),
                     prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Proszę wprowadzić email lub login';
+                      return AppLocalizations.of(context).translate("login_no_login");
                     }
                     return null;
                   },
@@ -127,15 +128,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Pole hasło
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Hasło',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).translate("login_password"),
                     prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Proszę wprowadzić hasło';
+                      return AppLocalizations.of(context).translate("login_no_password");
                     }
                     return null;
                   },
@@ -167,8 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator()
-                      : const Text(
-                          'Zaloguj się',
+                      : Text(
+                          AppLocalizations.of(context).translate("login_button"),
                           style: TextStyle(fontSize: 16),
                         ),
                 ),
@@ -179,10 +180,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Nie masz jeszcze konta?'),
+                    Text(AppLocalizations.of(context).translate("no_account")),
                     TextButton(
                       onPressed: () {Navigators.navigateToRegister(context);},
-                      child: const Text('Zarejestruj się'),
+                      child: Text(AppLocalizations.of(context).translate("register_link")),
                     ),
                   ],
                 ),
