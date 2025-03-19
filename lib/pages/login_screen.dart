@@ -157,21 +157,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                 const SizedBox(height: 24),
                 
-                // Przycisk logowania
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: _isLoading
+                FilledButton(
+                 onPressed: _isLoading ? null: _login,
+                 child: _isLoading
                       ? const CircularProgressIndicator()
                       : Text(
                           AppLocalizations.of(context).translate("login_button"),
                           style: TextStyle(fontSize: 16),
-                        ),
+                        )
                 ),
                 
                 const SizedBox(height: 16),
