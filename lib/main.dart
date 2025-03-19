@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: supportedLocales,
       title: "THD-C",
+      debugShowCheckedModeBanner: false,
       theme: defaultTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
