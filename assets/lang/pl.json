@@ -31,5 +31,8 @@
   "register_password_confirmation_failed": "Hasła nie są zgodne",
   "register_account_exist": "Masz już konto? Zaloguj się",
   "register_account_in_database": "Konto o takim adresie email lub nazwie użytkownika jest już zajęte",
-  "register_common_password": "Twoje hasło jest zbyt proste. Zmień, aby zwiększyć bezpieczeństwo swojego konta. Hasło powinno zawierać minimum 12 znaków."
+  "register_common_password": "Twoje hasło jest zbyt proste. Zmień, aby zwiększyć bezpieczeństwo swojego konta. Hasło powinno zawierać minimum 12 znaków.",
+  "google_local_account_exists": "Istnieje konto lokalne na ten adres email - nie możesz użyć autoryzacji google.",
+  "login_with_google": "Zaloguj się przez Google",
+  "or": "LUB"
 }
