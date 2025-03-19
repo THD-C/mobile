@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
@@ -17,6 +18,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'openid', 'profile'],
+  );
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -53,10 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
           // Sukces - przetwarzanie otrzymanego JWT
           final responseData = jsonDecode(response.body);
           final jwtToken = responseData['accessToken'];
-          
+
           // Zapisanie tokenu JWT
           await TokenHandler.saveToken(jwtToken);
-          
+
           // Przejście do głównego ekranu
           Navigators.navigateToHome(context);
         } else {
@@ -78,7 +82,75 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _googleAuth() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
 
+    try {
+      final googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // Użytkownik anulował logowanie Google
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      String userEmail = googleUser.email;
+      String userId = googleUser.id;
+
+      final registerData = {
+        'username': userEmail,
+        'email': userEmail,
+        'password': userId + userEmail,
+      };
+
+      var response = await http.post(
+        Uri.parse('$baseURL/api/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(registerData),
+      );
+
+
+      if (response.statusCode != 200) {
+
+        response = await http.post(
+          Uri.parse('$baseURL/api/auth/login'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'login': registerData['email'],
+            'password': registerData['password'],
+          }),
+        );
+
+        if (response.statusCode != 200) {
+          _errorMessage = AppLocalizations.of(
+            context,
+          ).translate("google_local_account_exists");
+          setState(() {
+          _isLoading = false;
+        });
+        return;
+        }
+      }
+
+      final responseData = jsonDecode(response.body);
+      final jwtToken = responseData['accessToken'];
+      await TokenHandler.saveToken(jwtToken);
+
+      Navigators.navigateToHome(context);
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Błąd logowania przez Google: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,52 +168,56 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Logo aplikacji
-                const Icon(
-                  Icons.lock_outline,
-                  size: 80,
-                  color: Colors.blue,
-                ),
-                
+                const Icon(Icons.lock_outline, size: 80, color: Colors.blue),
+
                 const SizedBox(height: 40),
-                
+
                 // Pole email/login
                 TextFormField(
                   controller: _loginController,
-                  decoration:  InputDecoration(
-                    labelText: AppLocalizations.of(context).translate("login_email_login"),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(
+                      context,
+                    ).translate("login_email_login"),
                     prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context).translate("login_no_login");
+                      return AppLocalizations.of(
+                        context,
+                      ).translate("login_no_login");
                     }
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Pole hasło
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context).translate("login_password"),
+                    labelText: AppLocalizations.of(
+                      context,
+                    ).translate("login_password"),
                     prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context).translate("login_no_password");
+                      return AppLocalizations.of(
+                        context,
+                      ).translate("login_no_password");
                     }
                     return null;
                   },
                 ),
-                
+
                 // Komunikat błędu
                 if (_errorMessage != null)
                   Padding(
@@ -154,29 +230,67 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 FilledButton(
-                 onPressed: _isLoading ? null: _login,
-                 child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          AppLocalizations.of(context).translate("login_button"),
-                          style: TextStyle(fontSize: 16),
-                        )
+                  onPressed: _isLoading ? null : _login,
+                  child:
+                      _isLoading
+                          ? const CircularProgressIndicator()
+                          : Text(
+                            AppLocalizations.of(
+                              context,
+                            ).translate("login_button"),
+                            style: TextStyle(fontSize: 16),
+                          ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
+                // Separator
+                Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(AppLocalizations.of(context).translate("or")),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // Przycisk logowania przez Google
+                OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _googleAuth,
+                  icon: Image.asset('assets/icons/google_logo.png.png', height: 24),
+                  label: Text(AppLocalizations.of(
+                  context,
+                ).translate("login_with_google")),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
                 // Link do rejestracji
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(AppLocalizations.of(context).translate("no_account")),
                     TextButton(
-                      onPressed: () {Navigators.navigateToRegister(context);},
-                      child: Text(AppLocalizations.of(context).translate("register_link")),
+                      onPressed: () {
+                        Navigators.navigateToRegister(context);
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).translate("register_link"),
+                      ),
                     ),
                   ],
                 ),
