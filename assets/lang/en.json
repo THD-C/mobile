@@ -31,5 +31,8 @@
   "register_password_confirmation_failed": "Passwords does not match",
   "register_account_exist": "Do you have an account already? Sign in",
   "register_account_in_database": "Account with this email or username already exists",
-  "register_common_password": "Your password is weak. Change it, to make your account safer. Password should be at least 12 characters long."
+  "register_common_password": "Your password is weak. Change it, to make your account safer. Password should be at least 12 characters long.",
+  "google_local_account_exists": "There is a local account connected with this email - Logging in with google in unavailable.",
+  "login_with_google": "Log in with Google",
+  "or": "OR"
 }
