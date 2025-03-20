@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+// PONIŻSZA KLASA POWINNA EXTENDOWAĆ StatefulWidget
 class MarketsView extends StatelessWidget {
   const MarketsView({super.key});
 

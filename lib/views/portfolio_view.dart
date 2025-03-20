@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+// PONIŻSZA KLASA POWINNA EXTENDOWAĆ StatefulWidget
 class PortfolioView extends StatelessWidget {
   const PortfolioView({super.key});
 
