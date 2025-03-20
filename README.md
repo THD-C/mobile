@@ -15,6 +15,28 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## Start app
+
+> :caution: Android Studio must be installed!
+
+Run in order to get added/updated/deleted dependencies:
+
+```
+flutter pub get
+```
+
+To start the application launch emulator:
+
+```
+flutter emulators --launch <emulator_ID>
+```
+
+for example:
+
+```
+flutter emulators --launch Pixel_7
+```
+
 ### Translations
 
 In [assets/lang](/assets/lang) are stored languages in `json` format.
@@ -35,6 +57,7 @@ and the equivalent in other languages ie `pl`:
 ```
 
 where the `key` will be used to retrieve the translation.
+After that **you must restart the app via** `flutter run` command.
 
 In order to use translation provide:
 

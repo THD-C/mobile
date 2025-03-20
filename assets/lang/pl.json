@@ -38,5 +38,15 @@
   "register_accept_terms": "Zapoznałem się i akceptuję ",
   "register_terms": "warunki i politykę prywatności",
   "register_terms_link": "pl/privacy-policy",
-  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności"
+  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności",
+
+  "blog_get_posts_exception": "Nie udało się pobrać postów. Spróbuj jeszcze raz",
+  "blog_no_posts_found": "Brak postów. Spróbuj wyszukać je inną frazą",
+  "search": "Szukaj",
+  "blog_read_more": "Czytaj więcej",
+
+  "main_navigation_bar_market": "Rynek",
+  "main_navigation_bar_blog": "Blog",
+  "main_navigation_bar_portfolio": "Portfolio",
+  "main_navigation_bar_account": "Konto"
 }

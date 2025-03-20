@@ -59,7 +59,6 @@ class _AuthCheckerState extends State<AuthChecker> {
   Future<void> _checkLogin() async {
     final token = await TokenHandler.loadToken();
     if (token != null && token.isNotEmpty) {
-
       final response = await http.post(
         Uri.parse('$baseURL/api/user'),
         headers: {
@@ -68,14 +67,13 @@ class _AuthCheckerState extends State<AuthChecker> {
         },
       );
 
-      if (response.statusCode == 200){
+      if (response.statusCode == 200) {
         setState(() {
           _isLoggedIn = true;
           _isLoading = false;
         });
       }
-    }
-    else{
+    } else {
       setState(() {
         _isLoading = false;
       });

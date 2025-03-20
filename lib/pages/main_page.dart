@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 
 import 'package:mobile/views/account_view.dart';
-import 'package:mobile/views/blog_view.dart';
+import 'package:mobile/views/blog/blog_view.dart';
 import 'package:mobile/views/markets_view.dart';
 import 'package:mobile/views/portfolio_view.dart';
 
@@ -36,12 +37,31 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemClicked,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Markets"),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Blog"),
-          BottomNavigationBarItem(icon: Icon(Icons.wallet), label: "Portfolio"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
-        
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.candlestick_chart),
+            label: AppLocalizations.of(
+              context,
+            ).translate('main_navigation_bar_market'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.my_library_books),
+            label: AppLocalizations.of(
+              context,
+            ).translate('main_navigation_bar_blog'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wallet),
+            label: AppLocalizations.of(
+              context,
+            ).translate('main_navigation_bar_portfolio'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: AppLocalizations.of(
+              context,
+            ).translate('main_navigation_bar_account'),
+          ),
         ],
       ),
     );
