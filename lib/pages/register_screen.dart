@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/tools/navigators.dart';
@@ -30,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _cityController = TextEditingController();
   final _postalCodeController = TextEditingController();
   final _countryController = TextEditingController();
+  var _is_checkbox_checked = false;
 
   @override
   void dispose() {
@@ -53,6 +56,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _isLoading = true;
         _errorMessage = null;
       });
+
+      if(!_is_checkbox_checked){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).translate("register_terms_error")),
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+      }
 
       try {
         // Sprawdzenie czy hasła są zgodne
@@ -89,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final responseData = jsonDecode(response.body);
         if (response.statusCode == 200) {
           // Sukces - przetwarzanie otrzymanego JWT
-          
+
           final jwtToken = responseData['accessToken'];
 
           // Zapisanie tokenu JWT
@@ -99,19 +114,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Navigators.navigateToHome(context);
         } else if (response.statusCode == 400) {
           String warningMessage = "";
-          if (responseData["detail"].toString() == "common_password"){
-            warningMessage = AppLocalizations.of(context).translate("register_common_password");
+          if (responseData["detail"].toString() == "common_password") {
+            warningMessage = AppLocalizations.of(
+              context,
+            ).translate("register_common_password");
+          } else {
+            AppLocalizations.of(
+              context,
+            ).translate("register_account_in_database");
           }
-          else{
-              AppLocalizations.of(context,).translate("register_account_in_database");
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                warningMessage,
-              ),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(warningMessage)));
         } else {
           // Błąd - wyświetlenie komunikatu
           final errorData = jsonDecode(response.body);
@@ -119,8 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _errorMessage = errorData['detail'] ?? 'Błąd rejestracji';
           });
         }
-      } 
-      finally {
+      } finally {
         setState(() {
           _isLoading = false;
         });
@@ -386,7 +399,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _is_checkbox_checked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _is_checkbox_checked = value!;
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: AppLocalizations.of(
+                                context,
+                              ).translate("register_accept_terms"),
+                            ),
+                            TextSpan(
+                              text: AppLocalizations.of(
+                                context,
+                              ).translate("register_terms"),
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer:
+                                  TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(Uri.parse('$baseURL/${AppLocalizations.of(context,).translate("register_terms_link")}'));
+                                      // Add your link handling code here
+                                      // For example: launchUrl(Uri.parse('https://example.com/terms'));
+                                    },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
                 const SizedBox(height: 32),
+
                 FilledButton(
                   onPressed: _isLoading ? null : _register,
                   child:
