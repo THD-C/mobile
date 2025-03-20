@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/tools/navigators.dart';
-import 'package:mobile/tools/token_handler.dart';
+
+import 'package:mobile/views/account_view.dart';
+import 'package:mobile/views/markets_view.dart';
+import 'package:mobile/views/portfolio_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,29 +12,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _pages = <Widget>[
+    const MarketsView(),
+    const PortfolioView(),
+    const AccountView(),
+  ];
+
+  void _onItemClicked(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Strona główna')
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemClicked,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Markets"),
+          BottomNavigationBarItem(icon: Icon(Icons.wallet), label: "Portfolio"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
+        
+        ],
       ),
-      body: ElevatedButton(
-                  onPressed: () {TokenHandler.saveToken("");
-                  Navigators.navigateToLogin(context);},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: 
-                      const Text(
-                          'Wyloguj',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                ),
     );
   }
-      
-  
 }
