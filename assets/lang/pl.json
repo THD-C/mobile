@@ -38,5 +38,9 @@
   "register_accept_terms": "Zapoznałem się i akceptuję ",
   "register_terms": "warunki i politykę prywatności",
   "register_terms_link": "pl/privacy-policy",
-  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności"
+  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności",
+
+  "blog_get_posts_exception": "Nie udało się pobrać postów. Spróbuj jeszcze raz",
+  "blog_no_posts_found": "Brak postów. Spróbuj wyszukać je inną frazą",
+  "search": "Szukaj"
 }
