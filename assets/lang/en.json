@@ -38,5 +38,8 @@
   "register_accept_terms": "I read and accept ",
   "register_terms": "terms and privacy policy",
   "register_terms_link": "en/privacy-policy",
-  "register_terms_error": "You have to accept terms and privacy policy"
+  "register_terms_error": "You have to accept terms and privacy policy",
+  "account_profile_bar": "Profie",
+  "account_logout": "Log out",
+  "account_terms": "Terms and privacy policy"
 }

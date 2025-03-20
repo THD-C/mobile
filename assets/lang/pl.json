@@ -38,5 +38,8 @@
   "register_accept_terms": "Zapoznałem się i akceptuję ",
   "register_terms": "warunki i politykę prywatności",
   "register_terms_link": "pl/privacy-policy",
-  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności"
+  "register_terms_error": "Musisz zaakepctować warunki i politykę prywatności",
+  "account_profile_bar": "Profil",
+  "account_logout": "Wyloguj",
+  "account_terms": "Warunki i polityka prywatności"
 }
