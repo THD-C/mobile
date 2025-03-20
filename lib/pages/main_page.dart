@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mobile/views/account_view.dart';
+import 'package:mobile/views/blog_view.dart';
 import 'package:mobile/views/markets_view.dart';
 import 'package:mobile/views/portfolio_view.dart';
 
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final List<Widget> _pages = <Widget>[
     const MarketsView(),
+    const BlogView(),
     const PortfolioView(),
     const AccountView(),
   ];
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemClicked,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Markets"),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Blog"),
           BottomNavigationBarItem(icon: Icon(Icons.wallet), label: "Portfolio"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
         

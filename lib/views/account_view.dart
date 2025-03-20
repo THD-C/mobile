@@ -8,14 +8,16 @@ class AccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
+      
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Text(
             'Profil użytkownika',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 40),
+          
           FilledButton(
             onPressed: () {
               TokenHandler.saveToken("");
