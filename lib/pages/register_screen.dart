@@ -414,7 +414,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Expanded(
                       child: RichText(
                         text: TextSpan(
-                          style: TextStyle(color: Colors.black),
+                          
                           children: [
                             TextSpan(
                               text: AppLocalizations.of(
