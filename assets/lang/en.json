@@ -42,5 +42,11 @@
 
   "blog_get_posts_exception": "Nie udało się pobrać postów. Spróbuj jeszcze raz",
   "blog_no_posts_found": "No posts found. Try again with different search",
-  "search": "Search"
+  "search": "Search",
+  "blog_read_more": "Read more",
+
+  "main_navigation_bar_market": "Market",
+  "main_navigation_bar_blog": "Blog",
+  "main_navigation_bar_portfolio": "Portfolio",
+  "main_navigation_bar_account": "Account"
 }

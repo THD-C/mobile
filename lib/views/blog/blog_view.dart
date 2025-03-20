@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/main.dart';
 import 'package:mobile/models/blog/blog_post.dart';
 import 'package:mobile/models/blog/blog_response.dart';
+import 'package:mobile/views/blog/blog_post_view.dart';
 
 class BlogView extends StatefulWidget {
   const BlogView({super.key});
@@ -49,8 +50,25 @@ class _BlogViewState extends State<BlogView> {
                 return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
+                    final blogPost = snapshot.data![index];
                     return ListTile(
-                      title: Text(snapshot.data!.elementAt(index).title),
+                      title: Text(blogPost.title),
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => BlogPostView(blogPost: blogPost),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          AppLocalizations.of(
+                            context,
+                          ).translate('blog_read_more'),
+                        ),
+                      ),
                     );
                   },
                 );
@@ -88,10 +106,6 @@ class _BlogViewState extends State<BlogView> {
       final Map<String, dynamic> parsedJson = json.decode(response.body);
       final blogsResponse = BlogsResponse.fromJson(parsedJson);
       final List<BlogPost> blogPosts = blogsResponse.toList();
-
-      for (var post in blogPosts) {
-        print('Title: ${post.toJson()}');
-      }
 
       return blogPosts;
     }

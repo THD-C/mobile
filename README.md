@@ -57,6 +57,7 @@ and the equivalent in other languages ie `pl`:
 ```
 
 where the `key` will be used to retrieve the translation.
+After that **you must restart the app via** `flutter run` command.
 
 In order to use translation provide:
 
