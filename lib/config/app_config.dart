@@ -13,6 +13,8 @@ class AppConfig {
 
   String get cryptoApiUrl => '$_apiBaseUrl/api/crypto';
 
+  String get walletApiUrl => '$_apiBaseUrl/api/wallets';
+
   void initialize({String? apiBaseUrl}) {
     if (apiBaseUrl != null) {
       _apiBaseUrl = apiBaseUrl;
