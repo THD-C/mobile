@@ -39,6 +39,17 @@
   "register_terms": "terms and privacy policy",
   "register_terms_link": "en/privacy-policy",
   "register_terms_error": "You have to accept terms and privacy policy",
+
+  "blog_get_posts_exception": "Nie udało się pobrać postów. Spróbuj jeszcze raz",
+  "blog_no_posts_found": "No posts found. Try again with different search",
+  "search": "Search",
+  "blog_read_more": "Read more",
+
+  "main_navigation_bar_market": "Market",
+  "main_navigation_bar_blog": "Blog",
+  "main_navigation_bar_portfolio": "Portfolio",
+  "main_navigation_bar_account": "Account",
+
   "account_profile_bar": "Profie",
   "account_logout": "Log out",
   "account_terms": "Terms and privacy policy"
