@@ -16,17 +16,19 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   late final TextEditingController streetController = TextEditingController();
   late final TextEditingController buildingController = TextEditingController();
   late final TextEditingController cityController = TextEditingController();
-  late final TextEditingController postalCodeController = TextEditingController();
+  late final TextEditingController postalCodeController =
+      TextEditingController();
   late final TextEditingController countryController = TextEditingController();
 
   bool _isLoading = true;
   String? _errorMessage;
+  String? _emailError;
 
   @override
   void initState() {
     super.initState();
 
-   _fetchUserData();
+    _fetchUserData();
   }
 
   @override
@@ -48,7 +50,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         _isLoading = true;
         _errorMessage = null;
       });
-      
+
       var response = await UserApiService().readById();
 
       setState(() {
@@ -64,13 +66,14 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = '${AppLocalizations.of(context).translate("edit_dialog_fetch_data_error")}: $e';
+        _errorMessage =
+            '${AppLocalizations.of(context).translate("edit_dialog_fetch_data_error")}: $e';
         _isLoading = false;
       });
     }
   }
 
-Future<void> _saveUserData() async {
+  Future<void> _saveUserData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -87,23 +90,50 @@ Future<void> _saveUserData() async {
         'postal_code': postalCodeController.text,
         'country': countryController.text,
       };
-      
+
       await UserApiService().update(updatedData);
 
-      
       // Zamknij dialog z sygnałem sukcesu
       if (mounted) {
         Navigator.pop(context, true);
       }
     } catch (e) {
       setState(() {
-        _errorMessage = '${AppLocalizations.of(context).translate("edit_dialog_update_data_error")}: $e';
+        _errorMessage =
+            '${AppLocalizations.of(context).translate("edit_dialog_update_data_error")}: $e';
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).translate("account_data_update_failed"))),
-        );
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(
+              context,
+            ).translate("account_data_update_failed"),
+          ),
+        ),
+      );
     }
+  }
+
+  void validateEmail() {
+    setState(() {
+      // Sprawdzenie czy email nie jest pusty
+      if (emailController.text.isEmpty) {
+        _emailError = AppLocalizations.of(
+          context,
+        ).translate("register_email_missing");
+      }
+      // Sprawdzenie poprawności formatu email za pomocą wyrażenia regularnego
+      else if (!RegExp(
+        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+      ).hasMatch(emailController.text)) {
+        _emailError = AppLocalizations.of(
+          context,
+        ).translate("register_email_wrong_format");
+      } else {
+        _emailError = null;
+      }
+    });
   }
 
   @override
@@ -116,36 +146,68 @@ Future<void> _saveUserData() async {
           children: [
             TextField(
               controller: emailController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("edit_email"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("edit_email")),
+              ),
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_first_name"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_first_name")),
+              ),
             ),
             TextField(
               controller: surnameController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_last_name"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_last_name")),
+              ),
             ),
             TextField(
               controller: streetController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_street"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_street")),
+              ),
             ),
             TextField(
               controller: buildingController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_building_no"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_building_no")),
+              ),
             ),
             TextField(
               controller: cityController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_city"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_city")),
+              ),
             ),
             TextField(
               controller: postalCodeController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_postal_code"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_postal_code")),
+              ),
             ),
             TextField(
               controller: countryController,
-              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_country"))),
+              decoration: InputDecoration(
+                labelText: (AppLocalizations.of(
+                  context,
+                ).translate("register_country")),
+              ),
             ),
           ],
         ),
@@ -157,7 +219,15 @@ Future<void> _saveUserData() async {
         ),
         FilledButton(
           onPressed: () async {
-            _saveUserData();
+            validateEmail();
+            if (_emailError == null) {
+              _saveUserData();
+            }
+            else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(_emailError!)),
+        );
+            }
           },
           child: Text(AppLocalizations.of(context).translate("edit_save")),
         ),
