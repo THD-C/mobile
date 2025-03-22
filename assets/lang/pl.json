@@ -54,6 +54,8 @@
   "account_logout": "Wyloguj",
   "account_terms": "Warunki i polityka prywatności",
   "account_edit_data": "Edytuj dane",
+  "account_edit_password": "Zmień hasło",
+  "account_donate": "Wesprzyj twórców",
   "account_data_updated_successfully": "Dane konta zaktualizowane",
   "account_data_update_failed": "Aktualizacja danych nie powiodła się",
 

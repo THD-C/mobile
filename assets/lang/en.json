@@ -54,6 +54,8 @@
   "account_logout": "Log out",
   "account_terms": "Terms and privacy policy",
   "account_edit_data": "Edit data",
+  "account_edit_password": "Change password",
+  "account_donate": "Support the authors",
   "account_data_updated_successfully": "Account updated",
   "account_data_update_failed": "Account update failed",
 
