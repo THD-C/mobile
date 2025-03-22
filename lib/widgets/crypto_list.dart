@@ -28,12 +28,10 @@ class CryptoListView extends StatelessWidget {
             cryptocurrency: crypto,
             showPriceRange: showPriceRange,
             onTap: () {
-              // Navigate to crypto detail page
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => CryptoDetail(cryptocurrency: crypto),
+                  builder: (context) => CryptoDetail(cryptocurrency: crypto),
                 ),
               );
             },

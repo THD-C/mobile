@@ -6,12 +6,12 @@ class CryptoListItem extends StatelessWidget {
 
   final CryptoCurrency cryptocurrency;
   final bool showPriceRange;
-  final VoidCallback onTap; // Add onTap callback
+  final VoidCallback onTap;
 
   const CryptoListItem({
     required this.cryptocurrency,
     required this.showPriceRange,
-    required this.onTap, // Make it required
+    required this.onTap,
     super.key,
   });
 
@@ -63,12 +63,11 @@ class CryptoListItem extends StatelessWidget {
                   fontSize: fontSize,
                 ),
               ),
-      onTap: onTap, // Add the onTap handler here
+      onTap: onTap,
     );
   }
 
   Widget _getCryptoIcon(CryptoCurrency crypto) {
-    // Map common cryptocurrencies to appropriate icons
     final Map<String, IconData> cryptoIcons = {
       'Bitcoin': Icons.currency_bitcoin,
       'Ethereum': Icons.currency_exchange,
