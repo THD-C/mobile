@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:mobile/main.dart';
-import 'package:mobile/tools/token_handler.dart';
+import 'package:mobile/tools/api_servicer/api_user.dart';
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -13,43 +9,23 @@ class EditProfileDialog extends StatefulWidget {
 }
 
 class _EditProfileDialogState extends State<EditProfileDialog> {
-  String _token = "";
-  late final TextEditingController emailController;
-  late final TextEditingController nameController;
-  late final TextEditingController surnameController;
-  late final TextEditingController streetController;
-  late final TextEditingController buildingController;
-  late final TextEditingController cityController;
-  late final TextEditingController postalCodeController;
-  late final TextEditingController countryController;
+  late final TextEditingController emailController = TextEditingController();
+  late final TextEditingController nameController = TextEditingController();
+  late final TextEditingController surnameController = TextEditingController();
+  late final TextEditingController streetController = TextEditingController();
+  late final TextEditingController buildingController = TextEditingController();
+  late final TextEditingController cityController = TextEditingController();
+  late final TextEditingController postalCodeController = TextEditingController();
+  late final TextEditingController countryController = TextEditingController();
+
+  bool _isLoading = true;
+  String? _errorMessage;
 
   @override
-  Future<void> initState() {
-    _token = (TokenHandler.loadToken())!;
-    final apiResponse = await http.get(
-      Uri.parse('$baseURL/api/user/'),
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer $_token",
-      },
-    );
-
-    if (apiResponse.statusCode != 200) {
-      Navigator.pop(context);
-    }
+  void initState() {
     super.initState();
-    final responseBody = jsonDecode(apiResponse.body);
 
-    emailController = TextEditingController(text: responseBody["email"]);
-    nameController = TextEditingController(text: responseBody["name"]);
-    surnameController = TextEditingController(text: responseBody["surname"]);
-    streetController = TextEditingController(text: responseBody["street"]);
-    buildingController = TextEditingController(text: responseBody["building"]);
-    cityController = TextEditingController(text: responseBody["city"]);
-    postalCodeController = TextEditingController(
-      text: responseBody["postalCode"],
-    );
-    countryController = TextEditingController(text: responseBody["country"]);
+   _fetchUserData();
   }
 
   @override
@@ -65,20 +41,65 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     super.dispose();
   }
 
-  Future<int> _sendUpdateData(Map<String, String> data) async {
-    final apiResponse = await http.put(
-      Uri.parse('$baseURL/api/user/'),
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer $_token",
-      },
-      body: data,
-    );
-    if (apiResponse.statusCode != 200) {
-      return apiResponse.statusCode;
-    }
+  Future<void> _fetchUserData() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+      
+      var response = await UserApiService().readById();
 
-    return 200;
+      setState(() {
+        emailController.text = response['email'] ?? '';
+        nameController.text = response['name'] ?? '';
+        surnameController.text = response['surname'] ?? '';
+        streetController.text = response['street'] ?? '';
+        buildingController.text = response['building'] ?? '';
+        cityController.text = response['city'] ?? '';
+        postalCodeController.text = response['postal_code'] ?? '';
+        countryController.text = response['country'] ?? '';
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Błąd podczas pobierania danych: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
+Future<void> _saveUserData() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      final updatedData = {
+        'email': emailController.text,
+        'name': nameController.text,
+        'surname': surnameController.text,
+        'street': streetController.text,
+        'building': buildingController.text,
+        'city': cityController.text,
+        'postal_code': postalCodeController.text,
+        'country': countryController.text,
+      };
+      
+      await UserApiService().update(updatedData);
+
+      
+      // Zamknij dialog z sygnałem sukcesu
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Błąd podczas zapisywania danych: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -132,27 +153,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         ),
         FilledButton(
           onPressed: () async {
-            // Zbieramy zaktualizowane dane
-            final updatedData = {
-              "email": emailController.text,
-              "name": nameController.text,
-              "surname": surnameController.text,
-              "street": streetController.text,
-              "building": buildingController.text,
-              "city": cityController.text,
-              "postal_code": postalCodeController.text,
-              "country": countryController.text,
-            };
-
-            int result = await _sendUpdateData(updatedData);
-            if (result == 200) {
-              Navigator.pop(context, true);
-            }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Wystąpił błąd podczas aktualizacji danych"),
-              ),
-            );
+            _saveUserData();
           },
           child: const Text('Zapisz'),
         ),
