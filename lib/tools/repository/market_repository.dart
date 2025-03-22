@@ -22,12 +22,12 @@ class CurrencyRepository {
       },
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      return CryptoCurrencyList.fromJson(data);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Failed to load cryptocurrencies');
     }
+
+    final Map<String, dynamic> data = json.decode(response.body);
+    return CryptoCurrencyList.fromJson(data);
   }
 
   static Future<FiatCurrencyList> fetchAllFiatCurrencies() async {
@@ -42,12 +42,12 @@ class CurrencyRepository {
       },
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      return FiatCurrencyList.fromJson(data);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Failed to load fiat currencies');
     }
+
+    final Map<String, dynamic> data = json.decode(response.body);
+    return FiatCurrencyList.fromJson(data);
   }
 
   static Future<FiatCurrencyList> fetchUserFiatCurrencies() async {
@@ -62,29 +62,28 @@ class CurrencyRepository {
       },
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final walletList = WalletList.fromJson(data);
-
-      final List<Wallet> fiatWallets =
-          walletList.wallets.where((wallet) => !wallet.isCrypto).toList();
-
-      fiatWallets.sort((a, b) => a.id.compareTo(b.id));
-
-      final Set<String> uniqueFiatCurrencies =
-          fiatWallets.map((wallet) => wallet.currency).toSet();
-
-      final List<FiatCurrency> fiatCurrencies =
-          uniqueFiatCurrencies
-              .map(
-                (currencyName) =>
-                    FiatCurrency(name: currencyName.toLowerCase()),
-              )
-              .toList();
-
-      return FiatCurrencyList(currencies: fiatCurrencies);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Failed to load user fiat currencies');
     }
+
+    final Map<String, dynamic> data = json.decode(response.body);
+    final walletList = WalletList.fromJson(data);
+
+    final List<Wallet> fiatWallets =
+        walletList.wallets.where((wallet) => !wallet.isCrypto).toList();
+
+    fiatWallets.sort((a, b) => a.id.compareTo(b.id));
+
+    final Set<String> uniqueFiatCurrencies =
+        fiatWallets.map((wallet) => wallet.currency).toSet();
+
+    final List<FiatCurrency> fiatCurrencies =
+        uniqueFiatCurrencies
+            .map(
+              (currencyName) => FiatCurrency(name: currencyName.toLowerCase()),
+            )
+            .toList();
+
+    return FiatCurrencyList(currencies: fiatCurrencies);
   }
 }
