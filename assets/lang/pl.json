@@ -52,5 +52,15 @@
 
   "account_profile_bar": "Profil",
   "account_logout": "Wyloguj",
-  "account_terms": "Warunki i polityka prywatności"
+  "account_terms": "Warunki i polityka prywatności",
+  "account_edit_data": "Edytuj dane",
+  "account_data_updated_successfully": "Dane konta zaktualizowane",
+  "account_data_update_failed": "Aktualizacja danych nie powiodła się",
+
+  "edit_dialog_fetch_data_error": "Wystąpił błąd podczas uzyskiwania danych konta",
+  "edit_dialog_update_data_error": "Wystąpił błąd podczas aktualizacji danych",
+  "edit_edit_account": "Edytuj dane konta",
+  "edit_email": "Email",
+  "edit_cancel": "Anuluj",
+  "edit_save": "Zapisz"
 }

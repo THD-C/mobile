@@ -50,7 +50,18 @@
   "main_navigation_bar_portfolio": "Portfolio",
   "main_navigation_bar_account": "Account",
 
-  "account_profile_bar": "Profie",
+  "account_profile_bar": "Profile",
   "account_logout": "Log out",
-  "account_terms": "Terms and privacy policy"
+  "account_terms": "Terms and privacy policy",
+  "account_edit_data": "Edit data",
+  "account_data_updated_successfully": "Account updated",
+  "account_data_update_failed": "Account update failed",
+
+  "edit_dialog_fetch_data_error": "Problems occured during fetch of profile's data",
+  "edit_dialog_update_data_error": "Problems occured during update of profile's data",
+  "edit_edit_account": "Edit data of your account",
+  "edit_email": "Email",
+  "edit_cancel": "Cancel",
+  "edit_save": "Save"
+
 }
