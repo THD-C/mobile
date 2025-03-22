@@ -433,8 +433,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   TapGestureRecognizer()
                                     ..onTap = () {
                                       launchUrl(Uri.parse('$baseURL/${AppLocalizations.of(context,).translate("register_terms_link")}'));
-                                      // Add your link handling code here
-                                      // For example: launchUrl(Uri.parse('https://example.com/terms'));
                                     },
                             ),
                           ],

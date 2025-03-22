@@ -11,7 +11,6 @@ class AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Tu nie pobieramy już danych użytkownika - to zadanie zostało przeniesione do dialogu
 
     return SingleChildScrollView(
       child: Padding(
@@ -20,11 +19,11 @@ class AccountView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Pasek górny "Profil"
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 25.0, bottom: 16.0),
               child: Center(
                 child: Text(
-                  'Profil',
+                  AppLocalizations.of(context).translate("account_profile_bar"),
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -37,7 +36,7 @@ class AccountView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => _openEditProfileDialog(context),
               icon: const Icon(Icons.edit),
-              label: const Text('Edytuj dane konta'),
+              label: Text(AppLocalizations.of(context).translate("account_edit_data")),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -54,24 +53,22 @@ class AccountView extends StatelessWidget {
                   (Route<dynamic> route) => false);
               },
               icon: const Icon(Icons.logout),
-              label: const Text('Wyloguj', style: TextStyle(fontSize: 16)),
+              label: Text(AppLocalizations.of(context).translate("account_logout"), style: TextStyle(fontSize: 16)),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 backgroundColor: Colors.red,
               ),
             ),
             
-            // Elastyczny odstęp, aby link do polityki był na dole
             const SizedBox(height: 40),
             
-            // Link do polityki prywatności
             Center(
               child: TextButton(
                 onPressed: () {
-                  // Tutaj możesz dodać nawigację do strony z polityką prywatności
+                  launchUrl(Uri.parse('$baseURL/${AppLocalizations.of(context,).translate("register_terms_link")}'));
                 },
                 child: Text(
-                  'Polityka Prywatności',
+                  AppLocalizations.of(context).translate("account_terms"),
                   style: TextStyle(color: Colors.blue[700]),
                 ),
               ),
@@ -82,17 +79,16 @@ class AccountView extends StatelessWidget {
     );
   }
   
-  // Metody otwierające dialogi
+
   void _openEditProfileDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => const EditProfileDialog(),
     ).then((success) {
       if (success == true) {
-        // Pokazujemy informację o powodzeniu operacji
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Dane zostały zaktualizowane')),
+          SnackBar(content: Text(AppLocalizations.of(context).translate("account_data_updated_successfully"))),
         );
       }
     });

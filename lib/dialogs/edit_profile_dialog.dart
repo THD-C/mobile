@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/tools/api_servicer/api_user.dart';
 
 class EditProfileDialog extends StatefulWidget {
@@ -63,7 +64,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Błąd podczas pobierania danych: $e';
+        _errorMessage = '${AppLocalizations.of(context).translate("edit_dialog_fetch_data_error")}: $e';
         _isLoading = false;
       });
     }
@@ -96,52 +97,55 @@ Future<void> _saveUserData() async {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Błąd podczas zapisywania danych: $e';
+        _errorMessage = '${AppLocalizations.of(context).translate("edit_dialog_update_data_error")}: $e';
         _isLoading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context).translate("account_data_update_failed"))),
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edytuj dane konta'),
+      title: Text(AppLocalizations.of(context).translate("edit_edit_account")),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("edit_email"))),
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Imię'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_first_name"))),
             ),
             TextField(
               controller: surnameController,
-              decoration: const InputDecoration(labelText: 'Nazwisko'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_last_name"))),
             ),
             TextField(
               controller: streetController,
-              decoration: const InputDecoration(labelText: 'Ulica'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_street"))),
             ),
             TextField(
               controller: buildingController,
-              decoration: const InputDecoration(labelText: 'Numer budynku'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_building_no"))),
             ),
             TextField(
               controller: cityController,
-              decoration: const InputDecoration(labelText: 'Miasto'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_city"))),
             ),
             TextField(
               controller: postalCodeController,
-              decoration: const InputDecoration(labelText: 'Kod pocztowy'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_postal_code"))),
             ),
             TextField(
               controller: countryController,
-              decoration: const InputDecoration(labelText: 'Kraj'),
+              decoration: InputDecoration(labelText: (AppLocalizations.of(context).translate("register_country"))),
             ),
           ],
         ),
@@ -149,13 +153,13 @@ Future<void> _saveUserData() async {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Anuluj'),
+          child: Text(AppLocalizations.of(context).translate("edit_cancel")),
         ),
         FilledButton(
           onPressed: () async {
             _saveUserData();
           },
-          child: const Text('Zapisz'),
+          child: Text(AppLocalizations.of(context).translate("edit_save")),
         ),
       ],
     );
