@@ -6,13 +6,15 @@ import 'package:mobile/models/crypto_currency.dart';
 import 'package:mobile/models/fiat_currency.dart';
 import 'package:mobile/tools/token_handler.dart';
 
-class MarketRepository {
-  static Future<CryptoCurrencyList> fetchCryptocurrencies() async {
+class CurrencyRepository {
+  static Future<CryptoCurrencyList> fetchCryptoCurrencies({
+    String currency = 'usd',
+  }) async {
     final token = await TokenHandler.loadToken();
     final cryptoApiUrl = AppConfig().cryptoApiUrl;
 
     final response = await http.get(
-      Uri.parse('$cryptoApiUrl/coins?currency=usd'),
+      Uri.parse('$cryptoApiUrl/coins?currency=$currency'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
