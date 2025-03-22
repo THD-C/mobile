@@ -7,13 +7,13 @@ class AppConfig {
 
   AppConfig._internal();
 
-  String _apiBaseUrl = 'http://thdc';
+  String _apiBaseUrl = 'http://thdc/api';
 
-  String get fiatApiUrl => '$_apiBaseUrl/api/currency';
+  String get fiatApiUrl => '$_apiBaseUrl/currency';
 
-  String get cryptoApiUrl => '$_apiBaseUrl/api/crypto';
+  String get cryptoApiUrl => '$_apiBaseUrl/crypto';
 
-  String get walletApiUrl => '$_apiBaseUrl/api/wallets';
+  String get walletApiUrl => '$_apiBaseUrl/wallets';
 
   void initialize({String? apiBaseUrl}) {
     if (apiBaseUrl != null) {
