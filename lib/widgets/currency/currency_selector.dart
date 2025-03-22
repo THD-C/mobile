@@ -24,9 +24,10 @@ class CurrencySelector extends StatelessWidget {
         children: [
           Text(
             selectedCurrency?.name.toUpperCase() ?? 'USD',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.normal),
           ),
           const SizedBox(width: 4),
+          const Icon(Icons.arrow_drop_down_sharp)
         ],
       ),
     );
