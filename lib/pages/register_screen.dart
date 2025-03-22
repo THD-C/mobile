@@ -420,6 +420,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               text: AppLocalizations.of(
                                 context,
                               ).translate("register_accept_terms"),
+                              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)
                             ),
                             TextSpan(
                               text: AppLocalizations.of(
