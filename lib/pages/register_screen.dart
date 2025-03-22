@@ -420,6 +420,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               text: AppLocalizations.of(
                                 context,
                               ).translate("register_accept_terms"),
+                              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)
                             ),
                             TextSpan(
                               text: AppLocalizations.of(
@@ -433,8 +434,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   TapGestureRecognizer()
                                     ..onTap = () {
                                       launchUrl(Uri.parse('$baseURL/${AppLocalizations.of(context,).translate("register_terms_link")}'));
-                                      // Add your link handling code here
-                                      // For example: launchUrl(Uri.parse('https://example.com/terms'));
                                     },
                             ),
                           ],
