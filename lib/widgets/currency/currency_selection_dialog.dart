@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:mobile/models/fiat_currency.dart';
+
+class CurrencySelectionDialog extends StatelessWidget {
+  final FiatCurrency? selectedCurrency;
+  final List<FiatCurrency> currencies;
+  final Function(FiatCurrency) onCurrencySelected;
+
+  const CurrencySelectionDialog({
+    super.key,
+    required this.selectedCurrency,
+    required this.currencies,
+    required this.onCurrencySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
+          maxWidth: MediaQuery.of(context).size.width * 0.3,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Text(
+                'Select Currency',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const Divider(height: 1),
+            Flexible(child: _buildCurrencyList(context)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCurrencyList(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: currencies.length,
+      itemBuilder: (context, index) {
+        final currency = currencies[index];
+        final isSelected = currency.name == selectedCurrency?.name;
+
+        return ListTile(
+          title: Text(
+            currency.name.toUpperCase(),
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          trailing: isSelected ? Icon(Icons.check, color: Colors.white) : null,
+          onTap: () {
+            Navigator.pop(context);
+            onCurrencySelected(currency);
+          },
+        );
+      },
+    );
+  }
+}
