@@ -66,6 +66,7 @@
   "edit_cancel": "Cancel",
   "edit_save": "Save",
 
+  "error_txt": "Error",
   "currency_selector_title": "Select currency",
   "currency_selector_empty": "No currencies available",
   "crypto_currency_loading_error": "Failed to load crypto currencies",

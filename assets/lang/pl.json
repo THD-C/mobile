@@ -66,6 +66,7 @@
   "edit_cancel": "Anuluj",
   "edit_save": "Zapisz",
 
+  "error_txt": "Błąd",
   "currency_selector_title": "Wybierz walutę",
   "currency_selector_empty": "Brak dostępnych walut",
   "crypto_currency_loading_error": "Nie udało się załadować krypto walut",
