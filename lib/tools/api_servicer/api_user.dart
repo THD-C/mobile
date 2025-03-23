@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/tools/api_servicer/api_interface.dart';
 import 'package:mobile/tools/token_handler.dart';
-import 'package:mobile/views/account_view.dart';
 
 class UserApiService extends apiCalls {
   final String _baseUrl = 'http://10.0.2.2:80/api/user/';
@@ -90,7 +88,7 @@ class UserApiService extends apiCalls {
     } else if (response.statusCode == 400) {
       throw ErrorDescription("invalid_old_password");
     } else if (response.statusCode == 401) {
-      AccountView.logout(context);
+      TokenHandler.logout(context);
     } else {
       throw ErrorDescription("change_password_fail");
     }
