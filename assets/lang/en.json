@@ -62,6 +62,33 @@
   "edit_email": "Email",
   "edit_cancel": "Cancel",
   "edit_save": "Save",
+
+  "error_txt": "Error",
+  "currency_selector_title": "Select currency",
+  "currency_selector_empty": "No currencies available",
+  "crypto_currency_loading_error": "Failed to load crypto currencies",
+  "fiat_currency_loading_error": "Failed to load fiat currencies",
+
+  "market_crypto_currencies": "Cryptocurrencies",
+  "market_fiat_currencies": "Fiat currencies",
+  "market_loading": "Loading market data",
+  "market_error_loading": "Failed to load market data",
+  "market_refresh": "Refresh",
+  "market_price": "Price",
+  "market_change_24h": "24h change",
+  "market_volume_24h": "24h volume",
+  "market_market_cap": "Market cap",
+  "market_change_view": "Change view",
+
+  "wallet_title": "Wallets",
+  "wallet_balance": "Balance",
+  "wallet_add_new": "Add new wallet",
+  "wallet_empty": "No wallets available",
+  "wallet_loading_error": "Failed to load wallets",
+  "wallet_details": "Wallet details",
+  "wallet_transactions": "Transactions",
+  "wallet_no_transactions": "No transactions found"
+
   "fill_all_fields": "Fill this field",
   "change_password": "Change your password",
   "change_password_success": "Password has been changed",

@@ -67,6 +67,32 @@
   "edit_cancel": "Anuluj",
   "edit_save": "Zapisz",
 
+  "error_txt": "Błąd",
+  "currency_selector_title": "Wybierz walutę",
+  "currency_selector_empty": "Brak dostępnych walut",
+  "crypto_currency_loading_error": "Nie udało się załadować krypto walut",
+  "fiat_currency_loading_error": "Nie udało się załadować walut tradycyjnych",
+
+  "market_crypto_currencies": "Kryptowaluty",
+  "market_fiat_currencies": "Waluty tradycyjne",
+  "market_loading": "Ładowanie danych rynkowych",
+  "market_error_loading": "Nie udało się załadować danych rynkowych",
+  "market_refresh": "Odśwież",
+  "market_price": "Cena",
+  "market_change_24h": "Zmiana 24h",
+  "market_volume_24h": "Wolumen 24h",
+  "market_market_cap": "Kapitalizacja",
+  "market_change_view": "Zmień widok",
+
+  "wallet_title": "Portfele",
+  "wallet_balance": "Saldo",
+  "wallet_add_new": "Dodaj nowy portfel",
+  "wallet_empty": "Brak dostępnych portfeli",
+  "wallet_loading_error": "Nie udało się załadować portfeli",
+  "wallet_details": "Szczegóły portfela",
+  "wallet_transactions": "Transakcje",
+  "wallet_no_transactions": "Nie znaleziono transakcji"
+
   "fill_all_fields": "Wypełnij to pole",
   "change_password": "Zmień swoje hasło",
   "change_password_success": "Hasło zostało zmienione",
@@ -75,6 +101,4 @@
   "change_password_new_password_confirmation": "Powtórz nowe hasło",
   "invalid_old_password": "Stare hasło jest niepoprawne",
   "change_password_fail": "Coś poszło nie tak... Nie udało się zmienić hasła"
-
-  
 }
