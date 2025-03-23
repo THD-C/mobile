@@ -16,18 +16,24 @@ class CurrencySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (currencies.isEmpty) return Container();
+    final bool hasCurrencies = currencies.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => _showSelectionDialog(context),
+      onTap: hasCurrencies ? () => _showSelectionDialog(context) : null,
       child: Row(
         children: [
           Text(
             selectedCurrency?.name.toUpperCase() ?? 'USD',
-            style: const TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              color: hasCurrencies ? null : Colors.grey,
+            ),
           ),
           const SizedBox(width: 4),
-          const Icon(Icons.arrow_drop_down_sharp)
+          Icon(
+            Icons.arrow_drop_down_sharp,
+            color: hasCurrencies ? null : Colors.grey,
+          ),
         ],
       ),
     );
