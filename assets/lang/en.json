@@ -6,6 +6,7 @@
   "login_password": "Password",
   "login_no_password": "Please put password",
   "login_button": "Sign in",
+  "invalid_credentials": "Credentials given are invalid",
   "no_account": "You don't have an account yet?",
   "register_link": "Register account",
   "register_app_bar": "Registration",
@@ -39,17 +40,14 @@
   "register_terms": "terms and privacy policy",
   "register_terms_link": "en/privacy-policy",
   "register_terms_error": "You have to accept terms and privacy policy",
-
   "blog_get_posts_exception": "Nie udało się pobrać postów. Spróbuj jeszcze raz",
   "blog_no_posts_found": "No posts found. Try again with different search",
   "search": "Search",
   "blog_read_more": "Read more",
-
   "main_navigation_bar_market": "Market",
   "main_navigation_bar_blog": "Blog",
   "main_navigation_bar_portfolio": "Portfolio",
   "main_navigation_bar_account": "Account",
-
   "account_profile_bar": "Profile",
   "account_logout": "Log out",
   "account_terms": "Terms and privacy policy",
@@ -58,7 +56,6 @@
   "account_donate": "Support the authors",
   "account_data_updated_successfully": "Account updated",
   "account_data_update_failed": "Account update failed",
-
   "edit_dialog_fetch_data_error": "Problems occured during fetch of profile's data",
   "edit_dialog_update_data_error": "Problems occured during update of profile's data",
   "edit_edit_account": "Edit data of your account",
@@ -91,4 +88,13 @@
   "wallet_details": "Wallet details",
   "wallet_transactions": "Transactions",
   "wallet_no_transactions": "No transactions found"
+
+  "fill_all_fields": "Fill this field",
+  "change_password": "Change your password",
+  "change_password_success": "Password has been changed",
+  "change_password_old_password": "Put old password",
+  "change_password_new_password": "Put new password",
+  "change_password_new_password_confirmation": "Confirm new password",
+  "invalid_old_password": "Old password is not correct",
+  "change_password_fail": "Something went wrong... Change password failed"
 }
