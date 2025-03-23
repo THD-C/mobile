@@ -7,7 +7,7 @@ class AppConfig {
 
   AppConfig._internal();
 
-  String _apiBaseUrl = 'http://thdc/api';
+  String _apiBaseUrl = 'http://10.0.2.2:80/api';
 
   String get fiatApiUrl => '$_apiBaseUrl/currency';
 
