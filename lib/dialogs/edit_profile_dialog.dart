@@ -70,6 +70,12 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             '${AppLocalizations.of(context).translate("edit_dialog_fetch_data_error")}: $e';
         _isLoading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_errorMessage!),
+          ),
+        );
+      
     }
   }
 
@@ -100,7 +106,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     } catch (e) {
       setState(() {
         _errorMessage =
-            '${AppLocalizations.of(context).translate("edit_dialog_update_data_error")}: $e';
+            AppLocalizations.of(context).translate("edit_dialog_update_data_error");
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
