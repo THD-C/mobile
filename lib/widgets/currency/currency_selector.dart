@@ -26,13 +26,13 @@ class CurrencySelector extends StatelessWidget {
             selectedCurrency?.name.toUpperCase() ?? 'USD',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              color: hasCurrencies ? null : Colors.grey,
+              // color: hasCurrencies ? null : Colors.grey,
             ),
           ),
           const SizedBox(width: 4),
           Icon(
             Icons.arrow_drop_down_sharp,
-            color: hasCurrencies ? null : Colors.grey,
+            // color: hasCurrencies ? null : Colors.grey,
           ),
         ],
       ),

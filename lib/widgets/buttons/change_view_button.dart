@@ -15,11 +15,8 @@ class ChangeViewButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: onToggleView,
-      icon: const Icon(Icons.list, color: Colors.white),
-      label: Text(
-        AppLocalizations.of(context).translate("market_change_view"),
-        style: TextStyle(color: Colors.white),
-      ),
+      icon: const Icon(Icons.list),
+      label: Text(AppLocalizations.of(context).translate("market_change_view")),
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
         minimumSize: Size.zero,

@@ -59,7 +59,7 @@ class CurrencySelectionDialog extends StatelessWidget {
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
-          trailing: isSelected ? Icon(Icons.check, color: Colors.white) : null,
+          trailing: isSelected ? Icon(Icons.check) : null,
           onTap: () {
             Navigator.pop(context);
             onCurrencySelected(currency);

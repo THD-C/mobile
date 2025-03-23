@@ -41,14 +41,14 @@ class CryptoListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'High: \$${cryptocurrency.high24h.toStringAsFixed(2)}',
+                    'Max: ${cryptocurrency.high24h.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: fontSize,
                     ),
                   ),
                   Text(
-                    'Low: \$${cryptocurrency.low24h.toStringAsFixed(2)}',
+                    'Min: ${cryptocurrency.low24h.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: fontSize,
