@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/crypto_currency.dart';
 import 'package:mobile/models/fiat_currency.dart';
 import 'package:mobile/tools/repository/market_repository.dart';
@@ -36,16 +37,13 @@ class MarketsViewState extends State<MarketsView> {
     });
 
     try {
-      _fiatCurrencyList = await CurrencyRepository.fetchUserFiatCurrencies(
-        context,
-      );
+      _fiatCurrencyList = await CurrencyRepository.fetchUserFiatCurrencies();
       String defaultCurrency =
-      _fiatCurrencyList.currencies.isNotEmpty
-          ? _fiatCurrencyList.currencies.first.name
-          : 'usd';
+          _fiatCurrencyList.currencies.isNotEmpty
+              ? _fiatCurrencyList.currencies.first.name
+              : 'usd';
 
       _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
-        context,
         defaultCurrency,
       );
 
@@ -54,7 +52,9 @@ class MarketsViewState extends State<MarketsView> {
         _selectedFiatCurrency = _fiatCurrencyList.currencies.first;
       }
     } catch (e) {
-      _errorMessage = 'Error: $e';
+      _errorMessage = AppLocalizations.of(
+        context,
+      ).translate('market_error_loading');
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -76,7 +76,6 @@ class MarketsViewState extends State<MarketsView> {
 
     try {
       _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
-        context,
         currency.name,
       );
     } finally {
@@ -130,7 +129,7 @@ class MarketHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(45.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
