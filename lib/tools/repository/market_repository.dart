@@ -42,7 +42,7 @@ class CurrencyRepository {
       },
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 || response.statusCode != 204) {
       throw Exception('Failed to load fiat currencies');
     }
 
@@ -61,6 +61,10 @@ class CurrencyRepository {
         'Authorization': 'Bearer $token',
       },
     );
+
+    if (response.statusCode == 204) {
+      return FiatCurrencyList(currencies: []);
+    }
 
     if (response.statusCode != 200) {
       throw Exception('Failed to load user fiat currencies');
