@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/dialogs/change_password_dialog.dart';
 import 'package:mobile/dialogs/edit_profile_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/pages/login_screen.dart';
 import 'package:mobile/tools/token_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AccountView extends StatelessWidget {
+class AccountView extends StatefulWidget {
   const AccountView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => AccountViewState();
+}
 
+class AccountViewState extends State<AccountView> {
+  bool? _googleUser;
+
+  @override
+  void initState() {
+    
+    super.initState();
+    _loadGoogleUserStatus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadGoogleUserStatus() async {
+  final prefs = await SharedPreferences.getInstance();
+  setState(() {
+    _googleUser = prefs.getBool('google_user') ?? false;
+  });
+}
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,66 +55,82 @@ class AccountView extends StatelessWidget {
                 ),
               ),
             ),
-            
-            
-            
+
             const SizedBox(height: 24),
-            
+
             FilledButton.icon(
               onPressed: () => _openEditProfileDialog(context),
               icon: const Icon(Icons.edit),
-              label: Text(AppLocalizations.of(context).translate("account_edit_data"), style: TextStyle(fontSize: 15)),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+              label: Text(
+                AppLocalizations.of(context).translate("account_edit_data"),
+                style: TextStyle(fontSize: 15),
               ),
-            ),
-            
-            const SizedBox(height: 24),
-
-            FilledButton.icon(
-              onPressed: null,
-              icon: const Icon(Icons.password),
-              label: Text(AppLocalizations.of(context).translate("account_edit_password"), style: TextStyle(fontSize: 15)),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
               ),
             ),
 
             const SizedBox(height: 24),
+
+            _googleUser == true
+                ? Container()
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => _openChangePasswordDialog(context),
+                      icon: const Icon(Icons.password),
+                      label: Text(
+                        AppLocalizations.of(
+                          context,
+                        ).translate("account_edit_password"),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
 
             FilledButton.icon(
               onPressed: null,
               icon: const Icon(Icons.money),
-              label: Text(AppLocalizations.of(context).translate("account_donate"), style: TextStyle(fontSize: 15)),
+              label: Text(
+                AppLocalizations.of(context).translate("account_donate"),
+                style: TextStyle(fontSize: 15),
+              ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
               ),
             ),
 
             const SizedBox(height: 30),
-            
-            // Przycisk "Wyloguj"
+
             FilledButton.icon(
-              onPressed: () {
-                TokenHandler.saveToken("");
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                  (Route<dynamic> route) => false);
-              },
+              onPressed: () => TokenHandler.logout(context),
               icon: const Icon(Icons.logout),
-              label: Text(AppLocalizations.of(context).translate("account_logout"), style: TextStyle(fontSize: 16)),
+              label: Text(
+                AppLocalizations.of(context).translate("account_logout"),
+                style: TextStyle(fontSize: 16),
+              ),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 backgroundColor: Colors.red,
               ),
             ),
-            
+
             const SizedBox(height: 40),
-            
+
             Center(
               child: TextButton(
                 onPressed: () {
-                  launchUrl(Uri.parse('$baseURL/${AppLocalizations.of(context,).translate("register_terms_link")}'));
+                  launchUrl(
+                    Uri.parse(
+                      '$baseURL/${AppLocalizations.of(context).translate("register_terms_link")}',
+                    ),
+                  );
                 },
                 child: Text(
                   AppLocalizations.of(context).translate("account_terms"),
@@ -100,7 +143,6 @@ class AccountView extends StatelessWidget {
       ),
     );
   }
-  
 
   void _openEditProfileDialog(BuildContext context) {
     showDialog(
@@ -108,9 +150,45 @@ class AccountView extends StatelessWidget {
       builder: (context) => const EditProfileDialog(),
     ).then((success) {
       if (success == true) {
-        
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).translate("account_data_updated_successfully"))),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              ).translate("account_data_updated_successfully"),
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void _openChangePasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const ChangePasswordDialog(),
+    ).then((success) {
+      if (success == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              ).translate("account_data_updated_successfully"),
+            ),
+          ),
+        );
+
+        TokenHandler.logout(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              ).translate("account_data_update_failed"),
+            ),
+          ),
         );
       }
     });

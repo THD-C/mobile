@@ -6,6 +6,7 @@
   "login_password": "Hasło",
   "login_no_password": "Proszę wprowadzić hasło",
   "login_button": "Zaloguj się",
+  "invalid_credentials": "Dane logowania są niepoprawne",
   "no_account": "Nie masz jeszcze konta?",
   "register_link": "Zarejestruj się",
   "register_app_bar": "Rejestracja",
@@ -64,5 +65,16 @@
   "edit_edit_account": "Edytuj dane konta",
   "edit_email": "Email",
   "edit_cancel": "Anuluj",
-  "edit_save": "Zapisz"
+  "edit_save": "Zapisz",
+
+  "fill_all_fields": "Wypełnij to pole",
+  "change_password": "Zmień swoje hasło",
+  "change_password_success": "Hasło zostało zmienione",
+  "change_password_old_password": "Wprowadź stare hasło",
+  "change_password_new_password": "Wprowadź nowe hasło",
+  "change_password_new_password_confirmation": "Powtórz nowe hasło",
+  "invalid_old_password": "Stare hasło jest niepoprawne",
+  "change_password_fail": "Coś poszło nie tak... Nie udało się zmienić hasła"
+
+  
 }

@@ -245,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (value.length < 12) {
                       return AppLocalizations.of(
                         context,
-                      ).translate("register_ password_too_short");
+                      ).translate("register_password_too_short");
                     }
                     return null;
                   },

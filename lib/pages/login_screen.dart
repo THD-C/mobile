@@ -7,6 +7,8 @@ import 'package:mobile/tools/navigators.dart';
 import 'package:mobile/tools/token_handler.dart';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -61,6 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
           // Zapisanie tokenu JWT
           await TokenHandler.saveToken(jwtToken);
 
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('google_user', false);
+
           // Przejście do głównego ekranu
           Navigators.navigateToHome(context);
         } else {
@@ -113,9 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: jsonEncode(registerData),
       );
 
-
       if (response.statusCode != 200) {
-
         response = await http.post(
           Uri.parse('$baseURL/api/auth/login'),
           headers: {'Content-Type': 'application/json'},
@@ -130,15 +133,18 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
           ).translate("google_local_account_exists");
           setState(() {
-          _isLoading = false;
-        });
-        return;
+            _isLoading = false;
+          });
+          return;
         }
       }
 
       final responseData = jsonDecode(response.body);
       final jwtToken = responseData['accessToken'];
       await TokenHandler.saveToken(jwtToken);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('google_user', true);
 
       Navigators.navigateToHome(context);
     } catch (e) {
@@ -265,10 +271,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Przycisk logowania przez Google
                 OutlinedButton.icon(
                   onPressed: _isLoading ? null : _googleAuth,
-                  icon: Image.asset('assets/icons/google_logo.png.png', height: 24),
-                  label: Text(AppLocalizations.of(
-                  context,
-                ).translate("login_with_google")),
+                  icon: Image.asset(
+                    'assets/icons/google_logo.png.png',
+                    height: 24,
+                  ),
+                  label: Text(
+                    AppLocalizations.of(context).translate("login_with_google"),
+                  ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
