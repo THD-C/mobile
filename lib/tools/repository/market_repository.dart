@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/config/app_config.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/crypto_currency.dart';
 import 'package:mobile/models/fiat_currency.dart';
 import 'package:mobile/models/wallet.dart';
@@ -9,6 +11,7 @@ import 'package:mobile/tools/token_handler.dart';
 
 class CurrencyRepository {
   static Future<CryptoCurrencyList> fetchCryptoCurrencies(
+    BuildContext context,
     String currency,
   ) async {
     final token = await TokenHandler.loadToken();
@@ -23,14 +26,18 @@ class CurrencyRepository {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load cryptocurrencies');
+      throw Exception(
+        AppLocalizations.of(context).translate('crypto_currency_loading_error'),
+      );
     }
 
     final Map<String, dynamic> data = json.decode(response.body);
     return CryptoCurrencyList.fromJson(data);
   }
 
-  static Future<FiatCurrencyList> fetchAllFiatCurrencies() async {
+  static Future<FiatCurrencyList> fetchAllFiatCurrencies(
+    BuildContext context,
+  ) async {
     final token = await TokenHandler.loadToken();
     final fiatApiUrl = AppConfig().fiatApiUrl;
 
@@ -47,14 +54,18 @@ class CurrencyRepository {
     }
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load fiat currencies');
+      throw Exception(
+        AppLocalizations.of(context).translate('fiat_currency_loading_error'),
+      );
     }
 
     final Map<String, dynamic> data = json.decode(response.body);
     return FiatCurrencyList.fromJson(data);
   }
 
-  static Future<FiatCurrencyList> fetchUserFiatCurrencies() async {
+  static Future<FiatCurrencyList> fetchUserFiatCurrencies(
+    BuildContext context,
+  ) async {
     final token = await TokenHandler.loadToken();
     final walletApiUrl = AppConfig().walletApiUrl;
 
@@ -71,7 +82,9 @@ class CurrencyRepository {
     }
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load user fiat currencies');
+      throw Exception(
+        AppLocalizations.of(context).translate('fiat_currency_loading_error'),
+      );
     }
 
     final Map<String, dynamic> data = json.decode(response.body);

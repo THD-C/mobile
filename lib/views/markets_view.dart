@@ -36,13 +36,16 @@ class MarketsViewState extends State<MarketsView> {
     });
 
     try {
-      _fiatCurrencyList = await CurrencyRepository.fetchUserFiatCurrencies();
+      _fiatCurrencyList = await CurrencyRepository.fetchUserFiatCurrencies(
+        context,
+      );
       String defaultCurrency =
-          _fiatCurrencyList.currencies.isNotEmpty
-              ? _fiatCurrencyList.currencies.first.name
-              : 'usd';
+      _fiatCurrencyList.currencies.isNotEmpty
+          ? _fiatCurrencyList.currencies.first.name
+          : 'usd';
 
       _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
+        context,
         defaultCurrency,
       );
 
@@ -73,6 +76,7 @@ class MarketsViewState extends State<MarketsView> {
 
     try {
       _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
+        context,
         currency.name,
       );
     } finally {

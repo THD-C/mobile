@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/fiat_currency.dart';
 
 class CurrencySelectionDialog extends StatelessWidget {
@@ -26,10 +27,12 @@ class CurrencySelectionDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: Text(
-                'Select Currency',
+                AppLocalizations.of(
+                  context,
+                ).translate("currency_selector_title"),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

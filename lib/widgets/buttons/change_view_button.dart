@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 
 class ChangeViewButton extends StatelessWidget {
   final bool showPriceRange;
@@ -15,7 +16,10 @@ class ChangeViewButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: onToggleView,
       icon: const Icon(Icons.list, color: Colors.white),
-      label: const Text('Change View', style: TextStyle(color: Colors.white)),
+      label: Text(
+        AppLocalizations.of(context).translate("market_change_view"),
+        style: TextStyle(color: Colors.white),
+      ),
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
         minimumSize: Size.zero,
