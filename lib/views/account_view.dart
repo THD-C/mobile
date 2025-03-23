@@ -5,10 +5,37 @@ import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/pages/login_screen.dart';
 import 'package:mobile/tools/token_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AccountView extends StatelessWidget {
+class AccountView extends StatefulWidget {
   const AccountView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => AccountViewState();
+}
+
+class AccountViewState extends State<AccountView> {
+  bool? _googleUser;
+
+  @override
+  void initState() {
+    
+    super.initState();
+    _loadGoogleUserStatus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadGoogleUserStatus() async {
+  final prefs = await SharedPreferences.getInstance();
+  setState(() {
+    _googleUser = prefs.getBool('google_user') ?? false;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -45,19 +72,27 @@ class AccountView extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            FilledButton.icon(
-              onPressed: () => _openChangePasswordDialog(context),
-              icon: const Icon(Icons.password),
-              label: Text(
-                AppLocalizations.of(context).translate("account_edit_password"),
-                style: TextStyle(fontSize: 15),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-              ),
-            ),
-
-            const SizedBox(height: 24),
+            _googleUser == true
+                ? Container()
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => _openChangePasswordDialog(context),
+                      icon: const Icon(Icons.password),
+                      label: Text(
+                        AppLocalizations.of(
+                          context,
+                        ).translate("account_edit_password"),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
 
             FilledButton.icon(
               onPressed: null,
@@ -73,9 +108,8 @@ class AccountView extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // Przycisk "Wyloguj"
             FilledButton.icon(
-              onPressed: () => logout(context),
+              onPressed: () => TokenHandler.logout(context),
               icon: const Icon(Icons.logout),
               label: Text(
                 AppLocalizations.of(context).translate("account_logout"),
@@ -145,10 +179,9 @@ class AccountView extends StatelessWidget {
           ),
         );
 
-        logout(context);
-      }
-      else{
-         ScaffoldMessenger.of(context).showSnackBar(
+        TokenHandler.logout(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               AppLocalizations.of(
@@ -159,15 +192,5 @@ class AccountView extends StatelessWidget {
         );
       }
     });
-  }
-
-  static void logout(BuildContext context) {
-    {
-      TokenHandler.saveToken("");
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (Route<dynamic> route) => false,
-      );
-    }
   }
 }
