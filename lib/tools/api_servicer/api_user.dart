@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/tools/api_servicer/api_interface.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class UserApiService extends apiCalls {
-  final String _baseUrl = 'http://10.0.2.2:80/api/user/';
+  final String _baseUrl = AppConfig().userApiUrl;
 
   @override
   Future<Map<String, dynamic>> create(
