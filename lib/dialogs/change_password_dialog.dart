@@ -13,7 +13,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   final _changePasswordForm = GlobalKey<FormState>();
   late final TextEditingController old_password = TextEditingController();
   late final TextEditingController new_password = TextEditingController();
-  late final TextEditingController new_password_confirmation = TextEditingController();
+  late final TextEditingController new_password_confirmation =
+      TextEditingController();
 
   bool _isLoading = false;
   String? _passwordError;
@@ -39,14 +40,14 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           _passwordError = null;
         });
 
-        if (new_password.text != new_password_confirmation.text){
+        if (new_password.text != new_password_confirmation.text) {
           setState(() {
             _passwordError = AppLocalizations.of(
-                        context,
-                      ).translate("register_password_confirmation_failed");
+              context,
+            ).translate("register_password_confirmation_failed");
             _isLoading = false;
           });
-          
+
           return;
         }
 
@@ -60,7 +61,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           _isLoading = false;
         });
 
-        if(mounted){
+        if (mounted) {
           Navigator.pop(context, true);
         }
       } catch (e) {
@@ -143,24 +144,24 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FilledButton(
+                    TextButton(
                       onPressed: () => Navigator.pop(context),
-                      style: FilledButton.styleFrom(backgroundColor: Colors.red),
                       child: Text(
                         AppLocalizations.of(context).translate("edit_cancel"),
-                        ),
                       ),
-                      
-                    
+                    ),
+
                     const SizedBox(width: 10),
                     FilledButton(
                       onPressed: _isLoading ? null : _updatePassword,
-                      child: _isLoading 
-                      ? const CircularProgressIndicator() 
-                      : Text(
-                        AppLocalizations.of(context).translate("edit_save")
-                      ),
-                    
+                      child:
+                          _isLoading
+                              ? const CircularProgressIndicator()
+                              : Text(
+                                AppLocalizations.of(
+                                  context,
+                                ).translate("edit_save"),
+                              ),
                     ),
                   ],
                 ),

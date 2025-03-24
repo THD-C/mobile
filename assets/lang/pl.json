@@ -100,5 +100,15 @@
   "change_password_new_password": "Wprowadź nowe hasło",
   "change_password_new_password_confirmation": "Powtórz nowe hasło",
   "invalid_old_password": "Stare hasło jest niepoprawne",
-  "change_password_fail": "Coś poszło nie tak... Nie udało się zmienić hasła"
+  "change_password_fail": "Coś poszło nie tak... Nie udało się zmienić hasła",
+
+  "donate_title": "Wesprzyj nas",
+  "donate_dialog_donate_data_error": "Wystąpił błąd podczas generowania linku dotacji",
+  "donate_cancel": "Anuluj",
+  "donate_pay": "Wesprzyj",
+  "donate_error_loading": "Nie udało się załadować danych walut",
+  "donate_nominal": "Nominał",
+
+  "value_cannot_be_negative": "Wartość nie może być ujemna",
+  "value_must_be_greater_than_zero": "Wartość musi być większa od 0"
 }

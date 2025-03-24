@@ -96,5 +96,15 @@
   "change_password_new_password": "Put new password",
   "change_password_new_password_confirmation": "Confirm new password",
   "invalid_old_password": "Old password is not correct",
-  "change_password_fail": "Something went wrong... Change password failed"
+  "change_password_fail": "Something went wrong... Change password failed",
+
+  "donate_title": "Support us",
+  "donate_dialog_donate_data_error": "Problems occured during payment link generation",
+  "donate_cancel": "Cancel",
+  "donate_pay": "Support",
+  "donate_error_loading": "Failed to load currencies data",
+  "donate_nominal": "Nominal",
+
+  "value_cannot_be_negative": "Value can not be negative",
+  "value_must_be_greater_than_zero": "Value must be greater than 0"
 }

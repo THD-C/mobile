@@ -47,7 +47,7 @@ class AuthChecker extends StatefulWidget {
 }
 
 class _AuthCheckerState extends State<AuthChecker> {
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isLoggedIn = false;
 
   @override
@@ -74,6 +74,7 @@ class _AuthCheckerState extends State<AuthChecker> {
         });
       }
     } else {
+      print('error');
       setState(() {
         _isLoading = false;
       });
