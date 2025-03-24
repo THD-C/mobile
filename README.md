@@ -68,3 +68,13 @@ In order to use translation provide:
 where `welcome` is the key from the `json` translation file.
 
 > :warning: `AppLocalizations.of(context).translate('welcome')` will only work inside `Text` widget
+
+Recommended key naming convention:
+
+```json
+{
+  "<component|widget|page|view>_<in_snake_case_name_whatever_you_want>"
+}
+```
+
+After adding new translations the must be restarted.

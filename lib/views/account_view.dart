@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/dialogs/change_password_dialog.dart';
+import 'package:mobile/dialogs/donate_dialog.dart';
+//import 'package:mobile/dialogs/change_password_dialog.dart';
 import 'package:mobile/dialogs/edit_profile_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
@@ -20,7 +22,6 @@ class AccountViewState extends State<AccountView> {
 
   @override
   void initState() {
-    
     super.initState();
     _loadGoogleUserStatus();
   }
@@ -31,11 +32,11 @@ class AccountViewState extends State<AccountView> {
   }
 
   Future<void> _loadGoogleUserStatus() async {
-  final prefs = await SharedPreferences.getInstance();
-  setState(() {
-    _googleUser = prefs.getBool('google_user') ?? false;
-  });
-}
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _googleUser = prefs.getBool('google_user') ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +96,8 @@ class AccountViewState extends State<AccountView> {
                 ),
 
             FilledButton.icon(
-              onPressed: null,
-              icon: const Icon(Icons.money),
+              onPressed: () => _donate(context),
+              icon: const Icon(Icons.favorite),
               label: Text(
                 AppLocalizations.of(context).translate("account_donate"),
                 style: TextStyle(fontSize: 15),
@@ -180,6 +181,35 @@ class AccountViewState extends State<AccountView> {
         );
 
         TokenHandler.logout(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              ).translate("account_data_update_failed"),
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void _donate(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const DonateDialog(),
+    ).then((success) {
+      if (success == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              ).translate("account_data_updated_successfully"),
+            ),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
