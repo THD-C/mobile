@@ -99,6 +99,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
       await UserApiService().update(updatedData, context);
 
+      _fetchUserData();
+
       // Zamknij dialog z sygnałem sukcesu
       if (mounted) {
         Navigator.pop(context, true);

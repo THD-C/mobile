@@ -30,28 +30,21 @@ class UserApiService extends apiCalls {
     id = -1,
     required BuildContext context,
   }) async {
-    try {
-      final token = await TokenHandler.loadToken();
-      final response = await http.get(
-        Uri.parse(_baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+    final token = await TokenHandler.loadToken();
+    final response = await http.get(
+      Uri.parse(_baseUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 401) {
-        TokenHandler.logout(context);
-      } else {
-        throw Exception(
-          'Błąd podczas pobierania danych: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      throw Exception('Nie udało się pobrać danych profilu: $e');
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return json.decode(response.body);
+    } else if (response.statusCode == 401) {
+      TokenHandler.logout(context);
     }
+    throw Exception('Nie udało się pobrać danych profilu');
   }
 
   @override
@@ -59,7 +52,6 @@ class UserApiService extends apiCalls {
     Map<String, dynamic> dataObject,
     BuildContext context,
   ) async {
-    try {
       final token = await TokenHandler.loadToken();
       final response = await http.put(
         Uri.parse(_baseUrl),
@@ -77,10 +69,7 @@ class UserApiService extends apiCalls {
         throw Exception(
           'Błąd podczas aktualizacji danych: ${response.statusCode}',
         );
-      }
-    } catch (e) {
-      throw Exception('Nie udało się zaktualizować danych profilu: $e');
-    }
+      }  
   }
 
   Future<void> updatePassword(
