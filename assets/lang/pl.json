@@ -91,7 +91,7 @@
   "wallet_loading_error": "Nie udało się załadować portfeli",
   "wallet_details": "Szczegóły portfela",
   "wallet_transactions": "Transakcje",
-  "wallet_no_transactions": "Nie znaleziono transakcji"
+  "wallet_no_transactions": "Nie znaleziono transakcji",
 
   "fill_all_fields": "Wypełnij to pole",
   "change_password": "Zmień swoje hasło",

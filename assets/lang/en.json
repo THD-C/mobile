@@ -87,7 +87,7 @@
   "wallet_loading_error": "Failed to load wallets",
   "wallet_details": "Wallet details",
   "wallet_transactions": "Transactions",
-  "wallet_no_transactions": "No transactions found"
+  "wallet_no_transactions": "No transactions found",
 
   "fill_all_fields": "Fill this field",
   "change_password": "Change your password",
