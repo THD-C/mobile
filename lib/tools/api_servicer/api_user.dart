@@ -1,54 +1,58 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/tools/api_servicer/api_interface.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class UserApiService extends apiCalls {
-  final String _baseUrl = 'http://10.0.2.2:80/api/user/';
+  final String _baseUrl = AppConfig().userApiUrl;
 
   @override
-  Future<Map<String, dynamic>> create(Map<String, dynamic> dataObject) {
+  Future<Map<String, dynamic>> create(
+    Map<String, dynamic> dataObject,
+    BuildContext context,
+  ) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, dynamic>> delete(objectId) {
+  Future<Map<String, dynamic>> delete(objectId, BuildContext context) {
     throw UnimplementedError();
   }
 
   @override
-  Future<List> read() async {
+  Future<List> read(BuildContext context) async {
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, dynamic>> readById({id = -1}) async {
-    try {
-      final token = await TokenHandler.loadToken();
-      final response = await http.get(
-        Uri.parse(_baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+  Future<Map<String, dynamic>> readById({
+    id = -1,
+    required BuildContext context,
+  }) async {
+    final token = await TokenHandler.loadToken();
+    final response = await http.get(
+      Uri.parse(_baseUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception(
-          'Błąd podczas pobierania danych: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      throw Exception('Nie udało się pobrać danych profilu: $e');
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return json.decode(response.body);
+    } else if (response.statusCode == 401) {
+      TokenHandler.logout(context);
     }
+    throw Exception('Nie udało się pobrać danych profilu');
   }
 
   @override
-  Future<void> update(Map<String, dynamic> dataObject) async {
-    try {
+  Future<void> update(
+    Map<String, dynamic> dataObject,
+    BuildContext context,
+  ) async {
       final token = await TokenHandler.loadToken();
       final response = await http.put(
         Uri.parse(_baseUrl),
@@ -58,15 +62,15 @@ class UserApiService extends apiCalls {
         },
         body: json.encode(dataObject),
       );
-
+      if (response.statusCode == 200) {
+        return;
+      } else if (response.statusCode == 401)
+        TokenHandler.logout(context);
       if (response.statusCode != 200) {
         throw Exception(
           'Błąd podczas aktualizacji danych: ${response.statusCode}',
         );
-      }
-    } catch (e) {
-      throw Exception('Nie udało się zaktualizować danych profilu: $e');
-    }
+      }  
   }
 
   Future<void> updatePassword(
@@ -80,10 +84,11 @@ class UserApiService extends apiCalls {
         "Content-Type": "application/json",
         'Authorization': "Bearer $token",
       },
-      body: json.encode(dataObject)
+      body: json.encode(dataObject),
     );
 
-    if (response.statusCode == 200 && json.decode(response.body)["success"] == true) {
+    if (response.statusCode == 200 &&
+        json.decode(response.body)["success"] == true) {
       return;
     } else if (response.statusCode == 400) {
       throw ErrorDescription("invalid_old_password");
