@@ -51,7 +51,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         _errorMessage = null;
       });
 
-      var response = await UserApiService().readById();
+      var response = await UserApiService().readById(context: context);
 
       setState(() {
         emailController.text = response['email'] ?? '';
@@ -97,7 +97,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         'country': countryController.text,
       };
 
-      await UserApiService().update(updatedData);
+      await UserApiService().update(updatedData, context);
 
       // Zamknij dialog z sygnałem sukcesu
       if (mounted) {
