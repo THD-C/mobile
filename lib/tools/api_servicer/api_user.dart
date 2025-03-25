@@ -33,7 +33,7 @@ class UserApiService extends apiCalls {
   }) async {
     final token = await TokenHandler.loadToken();
     final response = await http.get(
-      Uri.parse(_baseUrl),
+      Uri.parse('$_baseUrl/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -55,13 +55,14 @@ class UserApiService extends apiCalls {
   ) async {
       final token = await TokenHandler.loadToken();
       final response = await http.put(
-        Uri.parse(_baseUrl),
+        Uri.parse('$_baseUrl/'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: json.encode(dataObject),
       );
+
       if (response.statusCode == 200) {
         return;
       } else if (response.statusCode == 401)
@@ -79,7 +80,7 @@ class UserApiService extends apiCalls {
   ) async {
     final token = await TokenHandler.loadToken();
     final response = await http.put(
-      Uri.parse('${_baseUrl}update-password'),
+      Uri.parse('$_baseUrl/update-password'),
       headers: {
         "Content-Type": "application/json",
         'Authorization': "Bearer $token",

@@ -87,20 +87,20 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       });
 
       final updatedData = {
-        'email': emailController.text,
-        'name': nameController.text,
-        'surname': surnameController.text,
-        'street': streetController.text,
-        'building': buildingController.text,
-        'city': cityController.text,
-        'postal_code': postalCodeController.text,
-        'country': countryController.text,
+        'email': emailController.text.trim().isEmpty ? '' : emailController.text,
+        'name': nameController.text.trim().isEmpty ? '' : nameController.text,
+        'surname': surnameController.text.trim().isEmpty ? '' : surnameController.text,
+        'street': streetController.text.trim().isEmpty ? '' : streetController.text,
+        'building': buildingController.text.trim().isEmpty ? '' : buildingController.text,
+        'city': cityController.text.trim().isEmpty ? '' : cityController.text,
+        'postal_code': postalCodeController.text.trim().isEmpty ? '' : postalCodeController.text,
+        'country': countryController.text.trim().isEmpty ? '' : countryController.text,
       };
 
       await UserApiService().update(updatedData, context);
 
       _fetchUserData();
-
+      
       // Zamknij dialog z sygnałem sukcesu
       if (mounted) {
         Navigator.pop(context, true);

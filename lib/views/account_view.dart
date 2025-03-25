@@ -5,7 +5,6 @@ import 'package:mobile/dialogs/donate_dialog.dart';
 import 'package:mobile/dialogs/edit_profile_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
-import 'package:mobile/pages/login_screen.dart';
 import 'package:mobile/tools/token_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
