@@ -106,5 +106,15 @@
   "donate_nominal": "Nominal",
 
   "value_cannot_be_negative": "Value can not be negative",
-  "value_must_be_greater_than_zero": "Value must be greater than 0"
+  "value_must_be_greater_than_zero": "Value must be greater than 0",
+
+  "wallets_show": "Show wallets",
+  "wallets_cancel": "Cancel",
+  "wallets_save": "Save",
+  "wallets_add_wallet": "Add wallet",
+  "wallets_initial_value": "Initial value",
+  "wallets_currency": "Currency",
+  "wallets_error_loading": "Failed to load wallets",
+  "wallets_view_title": "Wallets",
+  "wallets_no_wallets_found": "No wallets found"
 }

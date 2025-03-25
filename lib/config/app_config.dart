@@ -16,6 +16,7 @@ class AppConfig {
   String get walletApiUrl => '$_apiBaseUrl/wallets';
 
   String get userApiUrl => '$_apiBaseUrl/user';
+  String get paymentApiUrl => '$_apiBaseUrl/payments';
 
   void initialize({String? apiBaseUrl}) {
     if (apiBaseUrl != null) {

@@ -110,5 +110,15 @@
   "donate_nominal": "Nominał",
 
   "value_cannot_be_negative": "Wartość nie może być ujemna",
-  "value_must_be_greater_than_zero": "Wartość musi być większa od 0"
+  "value_must_be_greater_than_zero": "Wartość musi być większa od 0",
+
+  "wallets_show": "Pokaż portfele",
+  "wallets_cancel": "Anuluj",
+  "wallets_save": "Zapisz",
+  "wallets_add_wallet": "Dodaj portfel",
+  "wallets_initial_value": "Wartość początkowa",
+  "wallets_currency": "Waluta",
+  "wallets_error_loading": "Nie udało się załadować portfeli",
+  "wallets_view_title": "Portfele",
+  "wallets_no_wallets_found": "Nie odnaleziono portfeli"
 }

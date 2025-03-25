@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 
-import 'package:mobile/views/account_view.dart';
+import 'package:mobile/views/account/account_view.dart';
 import 'package:mobile/views/blog/blog_view.dart';
 import 'package:mobile/views/markets_view.dart';
 import 'package:mobile/views/portfolio_view.dart';
