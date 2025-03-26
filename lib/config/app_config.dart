@@ -1,3 +1,5 @@
+import 'package:mobile/models/currency.dart';
+
 class AppConfig {
   static final AppConfig _instance = AppConfig._internal();
 
@@ -9,13 +11,15 @@ class AppConfig {
 
   String _apiBaseUrl = 'http://10.0.2.2:80/api';
 
-  String get fiatApiUrl => '$_apiBaseUrl/currency';
+  String get currencyApiUrl => '$_apiBaseUrl/currency';
 
   String get cryptoApiUrl => '$_apiBaseUrl/crypto';
 
   String get walletApiUrl => '$_apiBaseUrl/wallets';
 
   String get userApiUrl => '$_apiBaseUrl/user';
+  String get paymentApiUrl => '$_apiBaseUrl/payments';
+  Currency get defaultCurrency => Currency(name: 'USD');
 
   void initialize({String? apiBaseUrl}) {
     if (apiBaseUrl != null) {

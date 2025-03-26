@@ -80,15 +80,6 @@
   "market_market_cap": "Market cap",
   "market_change_view": "Change view",
 
-  "wallet_title": "Wallets",
-  "wallet_balance": "Balance",
-  "wallet_add_new": "Add new wallet",
-  "wallet_empty": "No wallets available",
-  "wallet_loading_error": "Failed to load wallets",
-  "wallet_details": "Wallet details",
-  "wallet_transactions": "Transactions",
-  "wallet_no_transactions": "No transactions found",
-
   "fill_all_fields": "Fill this field",
   "change_password": "Change your password",
   "change_password_success": "Password has been changed",
@@ -106,5 +97,33 @@
   "donate_nominal": "Nominal",
 
   "value_cannot_be_negative": "Value can not be negative",
-  "value_must_be_greater_than_zero": "Value must be greater than 0"
+  "value_must_be_greater_than_zero": "Value must be greater than 0",
+
+  "wallets_show": "Show wallets",
+  "wallets_add_wallet": "Add",
+  "wallets_add_wallet_dialog_title": "New wallet",
+  "wallets_initial_value": "Initial value",
+  "wallets_currency": "Currency",
+  "wallets_error_loading": "Failed to load wallets",
+  "wallets_view_title": "Wallets",
+  "wallets_no_wallets_found": "No wallets found",
+  "wallets_balance": "Balance",
+  "wallets_add_dialog_wallet_error": "Failed to add wallet",
+  "crypto_currencies_loading_error": "Failed to load crypto currencies",
+  "crypto_fiats_loading_error": "Failed to load fiat currencies",
+
+  "wallet_cancel": "Cancel",
+  "wallet_save": "Save",
+  "wallet_balance": "Balance",
+  "wallet_nominal": "Nominal",
+  "wallet_add_money_title": "Add money",
+  "wallet_add_money_error": "Failed to add money to the wallet",
+  "wallet_details": "Wallet details",
+  "wallet_transactions": "Transactions",
+  "wallet_no_transactions": "No transactions found",
+
+  "delete_title": "Usuwanie!",
+  "delete_confirmation_question": "Are you sure you want to proceed?",
+  "delete_cancel": "Cancel",
+  "delete_confirm": "Confirm"
 }

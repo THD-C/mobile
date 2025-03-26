@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/l10n/app_localizations.dart';
-import 'package:mobile/models/crypto_currency.dart';
+import 'package:mobile/models/coin.dart';
 
 class CryptoDetail extends StatelessWidget {
-  final CryptoCurrency cryptocurrency;
+  final Coin cryptocurrency;
 
   const CryptoDetail({required this.cryptocurrency, super.key});
 
@@ -27,7 +27,9 @@ class CryptoDetail extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(
-                      AppLocalizations.of(context).translate('market_change_24h'),
+                      AppLocalizations.of(
+                        context,
+                      ).translate('market_change_24h'),
                       '${cryptocurrency.priceChangePercentage24h > 0 ? "+" : ""}${cryptocurrency.priceChangePercentage24h.toStringAsFixed(2)}%',
                       valueColor:
                           cryptocurrency.priceChangePercentage24h >= 0

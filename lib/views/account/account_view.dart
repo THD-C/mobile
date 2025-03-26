@@ -6,6 +6,7 @@ import 'package:mobile/dialogs/edit_profile_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/tools/token_handler.dart';
+import 'package:mobile/views/account/account_wallets_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,7 +59,7 @@ class AccountViewState extends State<AccountView> {
 
             const SizedBox(height: 24),
 
-            FilledButton.icon(
+            OutlinedButton.icon(
               onPressed: () => _openEditProfileDialog(context),
               icon: const Icon(Icons.edit),
               label: Text(
@@ -77,7 +78,7 @@ class AccountViewState extends State<AccountView> {
                 : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    FilledButton.icon(
+                    OutlinedButton.icon(
                       onPressed: () => _openChangePasswordDialog(context),
                       icon: const Icon(Icons.password),
                       label: Text(
@@ -94,8 +95,27 @@ class AccountViewState extends State<AccountView> {
                   ],
                 ),
 
-            FilledButton.icon(
-              onPressed: () => _donate(context),
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountWalletsView()),
+                );
+              },
+              icon: const Icon(Icons.wallet),
+              label: Text(
+                AppLocalizations.of(context).translate("wallets_show"),
+                style: TextStyle(fontSize: 15),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            OutlinedButton.icon(
+              onPressed: () => _openDonateDialog(context),
               icon: const Icon(Icons.favorite),
               label: Text(
                 AppLocalizations.of(context).translate("account_donate"),
@@ -106,7 +126,7 @@ class AccountViewState extends State<AccountView> {
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 200),
 
             FilledButton.icon(
               onPressed: () => TokenHandler.logout(context),
@@ -117,7 +137,8 @@ class AccountViewState extends State<AccountView> {
               ),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                backgroundColor: Colors.red,
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.red[900],
               ),
             ),
 
@@ -134,7 +155,7 @@ class AccountViewState extends State<AccountView> {
                 },
                 child: Text(
                   AppLocalizations.of(context).translate("account_terms"),
-                  style: TextStyle(color: Colors.blue[700]),
+                  style: TextStyle(color: Colors.blue[300]),
                 ),
               ),
             ),
@@ -194,32 +215,7 @@ class AccountViewState extends State<AccountView> {
     });
   }
 
-  void _donate(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => const DonateDialog(),
-    ).then((success) {
-      if (success == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              ).translate("account_data_updated_successfully"),
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              ).translate("account_data_update_failed"),
-            ),
-          ),
-        );
-      }
-    });
+  void _openDonateDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => const DonateDialog());
   }
 }

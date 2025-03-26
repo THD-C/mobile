@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/models/crypto_currency.dart';
+import 'package:mobile/models/coin.dart';
 
 class CryptoListItem extends StatelessWidget {
   static const double fontSize = 12;
 
-  final CryptoCurrency cryptocurrency;
+  final Coin cryptocurrency;
   final bool showPriceRange;
   final VoidCallback onTap;
 
@@ -67,7 +67,7 @@ class CryptoListItem extends StatelessWidget {
     );
   }
 
-  Widget _getCryptoIcon(CryptoCurrency crypto) {
+  Widget _getCryptoIcon(Coin crypto) {
     final Map<String, IconData> cryptoIcons = {
       'Bitcoin': Icons.currency_bitcoin,
       'Ethereum': Icons.currency_exchange,

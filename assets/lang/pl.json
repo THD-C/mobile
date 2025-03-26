@@ -84,15 +84,6 @@
   "market_market_cap": "Kapitalizacja",
   "market_change_view": "Zmień widok",
 
-  "wallet_title": "Portfele",
-  "wallet_balance": "Saldo",
-  "wallet_add_new": "Dodaj nowy portfel",
-  "wallet_empty": "Brak dostępnych portfeli",
-  "wallet_loading_error": "Nie udało się załadować portfeli",
-  "wallet_details": "Szczegóły portfela",
-  "wallet_transactions": "Transakcje",
-  "wallet_no_transactions": "Nie znaleziono transakcji",
-
   "fill_all_fields": "Wypełnij to pole",
   "change_password": "Zmień swoje hasło",
   "change_password_success": "Hasło zostało zmienione",
@@ -110,5 +101,34 @@
   "donate_nominal": "Nominał",
 
   "value_cannot_be_negative": "Wartość nie może być ujemna",
-  "value_must_be_greater_than_zero": "Wartość musi być większa od 0"
+  "value_must_be_greater_than_zero": "Wartość musi być większa od 0",
+
+  "wallets_show": "Pokaż portfele",
+  "wallets_cancel": "Anuluj",
+  "wallets_save": "Zapisz",
+  "wallets_add_wallet": "Dodaj",
+  "wallets_add_wallet_dialog_title": "Nowy portfel",
+  "wallets_initial_value": "Wartość początkowa",
+  "wallets_currency": "Waluta",
+  "wallets_error_loading": "Nie udało się załadować portfeli",
+  "wallets_view_title": "Portfele",
+  "wallets_no_wallets_found": "Nie odnaleziono portfeli",
+  "wallets_balance": "Saldo",
+  "wallets_add_dialog_wallet_error": "Nie udało się dodać portfela",
+  "wallets_currencies_loading_error": "Nie udało się pobrać dostępnych walut",
+
+  "wallet_cancel": "Anuluj",
+  "wallet_save": "Zapisz",
+  "wallet_balance": "Saldo",
+  "wallet_nominal": "Nominał",
+  "wallet_add_money_title": "Dodaj fundusze",
+  "wallet_add_money_error": "Nie udało się dodać funduszy do portfela",
+  "wallet_details": "Szczegóły portfela",
+  "wallet_transactions": "Transakcje",
+  "wallet_no_transactions": "Brak transakcji",
+
+  "delete_title": "Usuwanie",
+  "delete_confirmation_question": "Czy na pewno chcesz kontynuować?",
+  "delete_cancel": "Anuluj",
+  "delete_confirm": "Potwierdź"
 }

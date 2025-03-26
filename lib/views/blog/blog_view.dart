@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/l10n/app_localizations.dart';
@@ -17,13 +16,7 @@ class BlogView extends StatefulWidget {
 }
 
 class _BlogViewState extends State<BlogView> {
-  List<String> _filteredPosts = [];
   String _titleSearchQuery = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

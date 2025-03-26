@@ -5,13 +5,14 @@ import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/tools/api_servicer/api_interface.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class PaymentApiService extends apiCalls {
-  final String _baseUrl = 'http://10.0.2.2:80/api/payments/';
+  final String _baseUrl = AppConfig().paymentApiUrl;
   final String _appLanguageCode = window.locale.languageCode;
 
   @override
