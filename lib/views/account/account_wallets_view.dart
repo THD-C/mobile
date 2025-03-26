@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/dialogs/delete_confirmation_dialog.dart';
 import 'package:mobile/dialogs/wallet/add_wallet_dialog.dart';
 import 'package:mobile/dialogs/wallet/add_wallet_money_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
@@ -58,6 +59,20 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
     );
   }
 
+  void _showDeleteDialog(Wallet wallet) {
+    showDialog(
+      context: context,
+      builder:
+          (BuildContext context) =>
+              DeleteConfirmationDialog(itemName: wallet.currency),
+    ).then(
+      (value) => {
+        if (value)
+          {WalletRepository.delete(wallet.id).then((_) => _fetchWallets())},
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,13 +110,23 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
                         subtitle: Text(
                           '${AppLocalizations.of(context).translate('wallets_balance')}: ${wallet.value}',
                         ),
-                        trailing:
+                        trailing: Row(
+                          mainAxisSize:
+                              MainAxisSize
+                                  .min, // Ensures row takes minimal space
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _showDeleteDialog(wallet),
+                            ),
                             wallet.isCrypto == false
                                 ? IconButton(
                                   icon: Icon(Icons.add, color: Colors.green),
                                   onPressed: () => _addMoneyToFiat(wallet),
                                 )
-                                : null,
+                                : SizedBox(width: 0),
+                          ],
+                        ),
                       );
                     },
                   ),

@@ -107,7 +107,7 @@ class WalletRepository {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.delete(
-        Uri.parse("$_walletsUrl/$id"),
+        Uri.parse("$_walletsUrl/?wallet_id=$id"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

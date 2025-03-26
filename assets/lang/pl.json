@@ -125,5 +125,10 @@
   "wallet_add_money_error": "Nie udało się dodać funduszy do portfela",
   "wallet_details": "Szczegóły portfela",
   "wallet_transactions": "Transakcje",
-  "wallet_no_transactions": "Brak transakcji"
+  "wallet_no_transactions": "Brak transakcji",
+
+  "delete_title": "Usuwanie",
+  "delete_confirmation_question": "Czy na pewno chcesz kontynuować?",
+  "delete_cancel": "Anuluj",
+  "delete_confirm": "Potwierdź"
 }
