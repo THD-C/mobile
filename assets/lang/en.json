@@ -115,6 +115,9 @@
   "wallet_cancel": "Cancel",
   "wallet_save": "Save",
   "wallet_balance": "Balance",
+  "wallet_nominal": "Nominal",
+  "wallet_add_money_title": "Add money",
+  "wallet_add_money_error": "Failed to add money to the wallet",
   "wallet_details": "Wallet details",
   "wallet_transactions": "Transactions",
   "wallet_no_transactions": "No transactions found"

@@ -1,76 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile/config/app_config.dart';
+import 'package:logger/logger.dart';
 import 'package:mobile/l10n/app_localizations.dart';
-import 'package:mobile/models/currency.dart';
-import 'package:mobile/tools/api_servicer/api_payment.dart';
-import 'package:mobile/widgets/currency/currency_selector.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mobile/models/wallet.dart';
+import 'package:mobile/tools/repositories/wallet_repository.dart';
 
-class DonateDialog extends StatefulWidget {
-  const DonateDialog({super.key});
+class AddWalletMoneyDialog extends StatefulWidget {
+  Wallet wallet;
+
+  AddWalletMoneyDialog({super.key, required this.wallet});
 
   @override
-  State<DonateDialog> createState() => _DonateDialogState();
+  State<AddWalletMoneyDialog> createState() => _AddWalletMoneyDialogState();
 }
 
-class _DonateDialogState extends State<DonateDialog> {
-  late final TextEditingController currencyController = TextEditingController(
-    text: AppConfig().defaultCurrency.name,
-  );
+class _AddWalletMoneyDialogState extends State<AddWalletMoneyDialog> {
   late final TextEditingController nominalController = TextEditingController(
     text: '1',
   );
 
-  Currency? _selectedFiatCurrency;
-  final List<Currency> availableCurrencies = [
-    Currency(name: 'USD'),
-    Currency(name: 'EUR'),
-    Currency(name: 'GBP'),
-    Currency(name: 'PLN'),
-  ];
-
-  @override
-  void initState() {
-    _onCurrencySelected(Currency(name: AppConfig().defaultCurrency.name));
-
-    super.initState();
-  }
-
   @override
   void dispose() {
-    currencyController.dispose();
     nominalController.dispose();
     super.dispose();
   }
 
-  Future<void> _donate() async {
+  Future<void> _add() async {
     try {
-      final donateDetails = {
-        'currency': _selectedFiatCurrency!.name,
-        'nominal': nominalController.text,
+      final walletMoney = {
+        'id': widget.wallet.id,
+        'currency': widget.wallet.currency,
+        'value': nominalController.text,
       };
-
-      final String paymentLink = await PaymentApiService().donate(
-        donateDetails,
-      );
-
-      final Uri paymentUri = Uri.parse(paymentLink);
-      if (!await launchUrl(paymentUri)) {
-        throw Exception('Could not launch $paymentUri');
-      }
+      await WalletRepository.update(walletMoney);
 
       // Zamknij dialog z sygnałem sukcesu
       if (mounted) {
         Navigator.pop(context, true);
       }
     } catch (e) {
+      Logger().e(e);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(
-              context,
-            ).translate("donate_dialog_donate_data_error"),
+            AppLocalizations.of(context).translate("wallet_add_money_error"),
           ),
         ),
       );
@@ -80,7 +53,9 @@ class _DonateDialogState extends State<DonateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).translate("donate_title")),
+      title: Text(
+        AppLocalizations.of(context).translate("wallet_add_money_title"),
+      ),
       content: SingleChildScrollView(
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -100,7 +75,7 @@ class _DonateDialogState extends State<DonateDialog> {
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(
                     context,
-                  ).translate("donate_nominal"),
+                  ).translate("wallet_nominal"),
                   errorText:
                       (double.tryParse(nominalController.text) ?? 0) < 0
                           ? AppLocalizations.of(
@@ -123,36 +98,19 @@ class _DonateDialogState extends State<DonateDialog> {
                 },
               ),
             ),
-            SizedBox(width: 10),
-            CurrencySelector(
-              selectedCurrency: _selectedFiatCurrency,
-              currencies: availableCurrencies,
-              onCurrencySelected: _onCurrencySelected,
-            ),
           ],
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(AppLocalizations.of(context).translate("donate_cancel")),
+          child: Text(AppLocalizations.of(context).translate("wallet_cancel")),
         ),
         FilledButton(
-          onPressed: () async {
-            await _donate();
-          },
-          child: Text(AppLocalizations.of(context).translate("donate_pay")),
+          onPressed: () async => await _add(),
+          child: Text(AppLocalizations.of(context).translate("wallet_save")),
         ),
       ],
     );
-  }
-
-  void _onCurrencySelected(Currency currency) {
-    setState(() {
-      _selectedFiatCurrency = currency;
-      currencyController.value = TextEditingValue(
-        text: currency.name.toUpperCase(),
-      );
-    });
   }
 }

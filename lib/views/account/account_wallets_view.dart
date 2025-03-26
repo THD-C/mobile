@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/dialogs/add_wallet_dialog.dart';
+import 'package:mobile/dialogs/wallet/add_wallet_dialog.dart';
+import 'package:mobile/dialogs/wallet/add_wallet_money_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/wallet.dart';
 import 'package:mobile/tools/repositories/wallet_repository.dart';
@@ -47,11 +48,14 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
   }
 
   void _addMoneyToFiat(Wallet wallet) {
-    if (!wallet.isCrypto) {
-      print("Adding money to ${wallet.currency} wallet!");
-    } else {
-      print("Cannot add money to crypto wallet");
-    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AddWalletMoneyDialog(wallet: wallet),
+    ).then(
+      (value) => {
+        if (value) {_fetchWallets()},
+      },
+    );
   }
 
   @override

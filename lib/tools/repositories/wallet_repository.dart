@@ -87,7 +87,7 @@ class WalletRepository {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.put(
-        Uri.parse("$_walletsUrl/${walletData['id']}"),
+        Uri.parse("$_walletsUrl/"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

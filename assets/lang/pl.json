@@ -117,10 +117,13 @@
   "wallets_add_dialog_wallet_error": "Nie udało się dodać portfela",
   "wallets_currencies_loading_error": "Nie udało się pobrać dostępnych walut",
 
-  "wallet_cancel": "Cancel",
-  "wallet_save": "Save",
-  "wallet_balance": "Balance",
-  "wallet_details": "Wallet details",
-  "wallet_transactions": "Transactions",
-  "wallet_no_transactions": "No transactions found"
+  "wallet_cancel": "Anuluj",
+  "wallet_save": "Zapisz",
+  "wallet_balance": "Saldo",
+  "wallet_nominal": "Nominał",
+  "wallet_add_money_title": "Dodaj fundusze",
+  "wallet_add_money_error": "Nie udało się dodać funduszy do portfela",
+  "wallet_details": "Szczegóły portfela",
+  "wallet_transactions": "Transakcje",
+  "wallet_no_transactions": "Brak transakcji"
 }
