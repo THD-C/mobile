@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/models/crypto_currency.dart';
+import 'package:mobile/models/coin.dart';
 import 'package:mobile/widgets/crypto/crypto_list_item.dart';
 import 'package:mobile/widgets/crypto/crypto_detail.dart';
 
 class CryptoListView extends StatelessWidget {
-  final CryptoCurrencyList cryptocurrencies;
+  final CoinList cryptocurrencies;
   final Future<void> Function() onRefresh;
   final bool showPriceRange;
 

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/currency.dart';
 
-class CurrencySelectionDialog extends StatelessWidget {
+class FiatCurrencySelectionDialog extends StatelessWidget {
   final Currency? selectedCurrency;
   final List<Currency> currencies;
   final Function(Currency) onCurrencySelected;
 
-  const CurrencySelectionDialog({
+  const FiatCurrencySelectionDialog({
     super.key,
     required this.selectedCurrency,
     required this.currencies,

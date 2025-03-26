@@ -2,15 +2,13 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:mobile/config/app_config.dart';
-import 'package:mobile/models/crypto_currency.dart';
-import 'package:mobile/models/fiat_currency.dart';
+import 'package:mobile/models/coin.dart';
+import 'package:mobile/models/currency.dart';
 import 'package:mobile/models/wallet.dart';
 import 'package:mobile/tools/token_handler.dart';
 
-class CurrencyRepository {
-  static Future<CryptoCurrencyList> fetchCryptoCurrencies(
-    String currency,
-  ) async {
+class MarketRepository {
+  static Future<CoinList> fetchCryptoCurrencies(String currency) async {
     final token = await TokenHandler.loadToken();
     final cryptoApiUrl = AppConfig().cryptoApiUrl;
 
@@ -29,15 +27,18 @@ class CurrencyRepository {
     }
 
     final Map<String, dynamic> data = json.decode(response.body);
-    return CryptoCurrencyList.fromJson(data);
+    return CoinList.fromJson(data);
   }
 
-  static Future<FiatCurrencyList> fetchAllFiatCurrencies() async {
+  static Future<CurrencyList> fetchAllFiatCurrencies() async {
     final token = await TokenHandler.loadToken();
-    final fiatApiUrl = AppConfig().fiatApiUrl;
+    final fiatApiUrl = AppConfig().currencyApiUrl;
 
+    print('NOTHING' + CurrencyType.FIAT.toString());
     final response = await http.get(
-      Uri.parse('$fiatApiUrl/currencies?currency_type=FIAT'),
+      Uri.parse(
+        '$fiatApiUrl/currencies?currency_type=${CurrencyType.FIAT.toString()}',
+      ),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -45,7 +46,7 @@ class CurrencyRepository {
     );
 
     if (response.statusCode == 204) {
-      return FiatCurrencyList(currencies: []);
+      return CurrencyList(currencies: []);
     }
 
     if (response.statusCode != 200) {
@@ -53,10 +54,10 @@ class CurrencyRepository {
     }
 
     final Map<String, dynamic> data = json.decode(response.body);
-    return FiatCurrencyList.fromJson(data);
+    return CurrencyList.fromJson(data);
   }
 
-  static Future<FiatCurrencyList> fetchUserFiatCurrencies() async {
+  static Future<CurrencyList> fetchUserFiatCurrencies() async {
     final token = await TokenHandler.loadToken();
     final walletApiUrl = AppConfig().walletApiUrl;
 
@@ -69,7 +70,7 @@ class CurrencyRepository {
     );
 
     if (response.statusCode == 204) {
-      return FiatCurrencyList(currencies: []);
+      return CurrencyList(currencies: []);
     }
 
     if (response.statusCode != 200) {
@@ -89,13 +90,11 @@ class CurrencyRepository {
     final Set<String> uniqueFiatCurrencies =
         fiatWallets.map((wallet) => wallet.currency).toSet();
 
-    final List<FiatCurrency> fiatCurrencies =
+    final List<Currency> fiatCurrencies =
         uniqueFiatCurrencies
-            .map(
-              (currencyName) => FiatCurrency(name: currencyName.toLowerCase()),
-            )
+            .map((currencyName) => Currency(name: currencyName.toLowerCase()))
             .toList();
 
-    return FiatCurrencyList(currencies: fiatCurrencies);
+    return CurrencyList(currencies: fiatCurrencies);
   }
 }

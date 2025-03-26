@@ -84,15 +84,6 @@
   "market_market_cap": "Kapitalizacja",
   "market_change_view": "Zmień widok",
 
-  "wallet_title": "Portfele",
-  "wallet_balance": "Saldo",
-  "wallet_add_new": "Dodaj nowy portfel",
-  "wallet_empty": "Brak dostępnych portfeli",
-  "wallet_loading_error": "Nie udało się załadować portfeli",
-  "wallet_details": "Szczegóły portfela",
-  "wallet_transactions": "Transakcje",
-  "wallet_no_transactions": "Nie znaleziono transakcji",
-
   "fill_all_fields": "Wypełnij to pole",
   "change_password": "Zmień swoje hasło",
   "change_password_success": "Hasło zostało zmienione",
@@ -115,10 +106,21 @@
   "wallets_show": "Pokaż portfele",
   "wallets_cancel": "Anuluj",
   "wallets_save": "Zapisz",
-  "wallets_add_wallet": "Dodaj portfel",
+  "wallets_add_wallet": "Dodaj",
+  "wallets_add_wallet_dialog_title": "Nowy portfel",
   "wallets_initial_value": "Wartość początkowa",
   "wallets_currency": "Waluta",
   "wallets_error_loading": "Nie udało się załadować portfeli",
   "wallets_view_title": "Portfele",
-  "wallets_no_wallets_found": "Nie odnaleziono portfeli"
+  "wallets_no_wallets_found": "Nie odnaleziono portfeli",
+  "wallets_balance": "Saldo",
+  "wallets_add_dialog_wallet_error": "Nie udało się dodać portfela",
+  "wallets_currencies_loading_error": "Nie udało się pobrać dostępnych walut",
+
+  "wallet_cancel": "Cancel",
+  "wallet_save": "Save",
+  "wallet_balance": "Balance",
+  "wallet_details": "Wallet details",
+  "wallet_transactions": "Transactions",
+  "wallet_no_transactions": "No transactions found"
 }

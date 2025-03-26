@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/models/fiat_currency.dart';
+import 'package:mobile/config/app_config.dart';
+import 'package:mobile/models/currency.dart';
 import 'package:mobile/widgets/currency/currency_selection_dialog.dart';
 
 class CurrencySelector extends StatelessWidget {
-  final FiatCurrency? selectedCurrency;
-  final List<FiatCurrency> currencies;
-  final Function(FiatCurrency) onCurrencySelected;
+  final Currency? selectedCurrency;
+  final List<Currency> currencies;
+  final Function(Currency) onCurrencySelected;
 
   const CurrencySelector({
     super.key,
@@ -23,7 +24,8 @@ class CurrencySelector extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            selectedCurrency?.name.toUpperCase() ?? 'USD',
+            selectedCurrency?.name.toUpperCase() ??
+                AppConfig().defaultCurrency.name,
             style: TextStyle(
               fontWeight: FontWeight.normal,
               // color: hasCurrencies ? null : Colors.grey,

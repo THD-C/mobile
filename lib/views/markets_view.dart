@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/l10n/app_localizations.dart';
-import 'package:mobile/models/crypto_currency.dart';
-import 'package:mobile/models/fiat_currency.dart';
-import 'package:mobile/tools/repository/market_repository.dart';
+import 'package:mobile/models/coin.dart';
+import 'package:mobile/models/currency.dart';
+import 'package:mobile/tools/repositories/market_repository.dart';
 import 'package:mobile/widgets/buttons/change_view_button.dart';
 import 'package:mobile/widgets/crypto/crypto_list.dart';
-import 'package:mobile/widgets/currency/currency_selector.dart';
+import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 
 class MarketsView extends StatefulWidget {
   const MarketsView({super.key});
@@ -15,12 +16,12 @@ class MarketsView extends StatefulWidget {
 }
 
 class MarketsViewState extends State<MarketsView> {
-  CryptoCurrencyList _cryptoCurrencyList = CryptoCurrencyList.empty();
-  FiatCurrencyList _fiatCurrencyList = FiatCurrencyList.empty();
+  CoinList _cryptoCurrencyList = CoinList.empty();
+  CurrencyList _fiatCurrencyList = CurrencyList.empty();
   bool _isLoading = false;
   String? _errorMessage;
   bool _showPriceRange = false;
-  FiatCurrency? _selectedFiatCurrency;
+  Currency? _selectedFiatCurrency;
 
   @override
   void initState() {
@@ -37,13 +38,13 @@ class MarketsViewState extends State<MarketsView> {
     });
 
     try {
-      _fiatCurrencyList = await CurrencyRepository.fetchUserFiatCurrencies();
+      _fiatCurrencyList = await MarketRepository.fetchUserFiatCurrencies();
       String defaultCurrency =
           _fiatCurrencyList.currencies.isNotEmpty
               ? _fiatCurrencyList.currencies.first.name
-              : 'usd';
+              : AppConfig().defaultCurrency.name.toLowerCase();
 
-      _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
+      _cryptoCurrencyList = await MarketRepository.fetchCryptoCurrencies(
         defaultCurrency,
       );
 
@@ -66,7 +67,7 @@ class MarketsViewState extends State<MarketsView> {
     setState(() => _showPriceRange = !_showPriceRange);
   }
 
-  Future<void> _onCurrencySelected(FiatCurrency currency) async {
+  Future<void> _onCurrencySelected(Currency currency) async {
     if (currency.name == _selectedFiatCurrency?.name) return;
 
     setState(() {
@@ -75,7 +76,7 @@ class MarketsViewState extends State<MarketsView> {
     });
 
     try {
-      _cryptoCurrencyList = await CurrencyRepository.fetchCryptoCurrencies(
+      _cryptoCurrencyList = await MarketRepository.fetchCryptoCurrencies(
         currency.name,
       );
     } finally {
@@ -113,9 +114,9 @@ class MarketsViewState extends State<MarketsView> {
 class MarketHeader extends StatelessWidget {
   final bool showPriceRange;
   final VoidCallback onToggleView;
-  final FiatCurrency? selectedCurrency;
-  final List<FiatCurrency> currencies;
-  final Function(FiatCurrency) onCurrencySelected;
+  final Currency? selectedCurrency;
+  final List<Currency> currencies;
+  final Function(Currency) onCurrencySelected;
 
   const MarketHeader({
     super.key,
@@ -137,9 +138,8 @@ class MarketHeader extends StatelessWidget {
             showPriceRange: showPriceRange,
             onToggleView: onToggleView,
           ),
-          CurrencySelector(
+          FiatCurrencySelector(
             selectedCurrency: selectedCurrency,
-            currencies: currencies,
             onCurrencySelected: onCurrencySelected,
           ),
         ],
@@ -151,7 +151,7 @@ class MarketHeader extends StatelessWidget {
 class MarketContent extends StatelessWidget {
   final bool isLoading;
   final String? errorMessage;
-  final CryptoCurrencyList cryptocurrencies;
+  final CoinList cryptocurrencies;
   final Future<void> Function() onRefresh;
   final bool showPriceRange;
 

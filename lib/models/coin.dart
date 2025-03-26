@@ -1,4 +1,4 @@
-class CryptoCurrency {
+class Coin {
   final String id;
   final String name;
   final String symbol;
@@ -7,7 +7,7 @@ class CryptoCurrency {
   final double high24h;
   final double low24h;
 
-  CryptoCurrency({
+  Coin({
     required this.id,
     required this.name,
     required this.symbol,
@@ -17,12 +17,12 @@ class CryptoCurrency {
     required this.low24h,
   });
 
-  factory CryptoCurrency.fromJson(Map<String, dynamic> coinObject) {
+  factory Coin.fromJson(Map<String, dynamic> coinObject) {
     String coinKey = coinObject.keys.first;
     var coinData = coinObject[coinKey];
     var marketData = coinData['market_data'];
 
-    return CryptoCurrency(
+    return Coin(
       id: coinData['id'],
       name: coinData['name'],
       symbol: coinData['symbol'],
@@ -35,24 +35,24 @@ class CryptoCurrency {
   }
 }
 
-class CryptoCurrencyList {
-  final List<CryptoCurrency> cryptocurrencies;
+class CoinList {
+  final List<Coin> cryptocurrencies;
 
-  CryptoCurrencyList({required this.cryptocurrencies});
+  CoinList({required this.cryptocurrencies});
 
-  factory CryptoCurrencyList.fromJson(Map<String, dynamic> json) {
+  factory CoinList.fromJson(Map<String, dynamic> json) {
     var coinsJson = json['coins'] as List;
-    List<CryptoCurrency> coinsList =
-        coinsJson.map((coinJson) => CryptoCurrency.fromJson(coinJson)).toList();
+    List<Coin> coinsList =
+        coinsJson.map((coinJson) => Coin.fromJson(coinJson)).toList();
 
-    return CryptoCurrencyList(cryptocurrencies: coinsList);
+    return CoinList(cryptocurrencies: coinsList);
   }
 
   static empty() {
-    return CryptoCurrencyList(cryptocurrencies: []);
+    return CoinList(cryptocurrencies: []);
   }
 
   int get length => cryptocurrencies.length;
 
-  CryptoCurrency operator [](int index) => cryptocurrencies[index];
+  Coin operator [](int index) => cryptocurrencies[index];
 }

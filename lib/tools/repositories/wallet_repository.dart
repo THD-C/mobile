@@ -6,13 +6,13 @@ import 'package:mobile/models/wallet.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class WalletRepository {
-  static final String _baseUrl = AppConfig().walletApiUrl;
+  static final String _walletsUrl = AppConfig().walletApiUrl;
 
   static Future<List<Wallet>> fetchAll() async {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.get(
-        Uri.parse("$_baseUrl"),
+        Uri.parse("$_walletsUrl"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -28,7 +28,11 @@ class WalletRepository {
       }
 
       final List<dynamic> data = json.decode(response.body)['wallets'];
-      return data.map((wallet) => Wallet.fromJson(wallet)).toList();
+      final List<Wallet> result =
+          data.map((wallet) => Wallet.fromJson(wallet)).toList();
+      result.sort((w1, w2) => w1.currency.compareTo(w2.currency));
+
+      return result;
     } catch (e) {
       throw Exception("Error in fetchAllWallets: $e");
     }
@@ -38,7 +42,7 @@ class WalletRepository {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.get(
-        Uri.parse("$_baseUrl/$id"),
+        Uri.parse("$_walletsUrl/wallet/$id"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -56,19 +60,19 @@ class WalletRepository {
     }
   }
 
-  static Future<Wallet> create(Map<String, dynamic> walletData) async {
+  static Future<Wallet> create(Map<String, dynamic> newWallet) async {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.post(
-        Uri.parse("$_baseUrl/wallets"),
+        Uri.parse("$_walletsUrl/"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: json.encode(walletData),
+        body: json.encode(newWallet),
       );
 
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception("Failed to create wallet: ${response.statusCode}");
       }
 
@@ -83,7 +87,7 @@ class WalletRepository {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.put(
-        Uri.parse("$_baseUrl/${walletData['id']}"),
+        Uri.parse("$_walletsUrl/${walletData['id']}"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -103,7 +107,7 @@ class WalletRepository {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.delete(
-        Uri.parse("$_baseUrl/$id"),
+        Uri.parse("$_walletsUrl/$id"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

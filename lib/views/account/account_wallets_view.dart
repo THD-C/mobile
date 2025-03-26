@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/dialogs/add_wallet_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/wallet.dart';
-import 'package:mobile/tools/api_servicer/api_wallet.dart';
-import 'package:mobile/tools/repository/wallet_repository.dart';
+import 'package:mobile/tools/repositories/wallet_repository.dart';
 
 class AccountWalletsView extends StatefulWidget {
   const AccountWalletsView({Key? key}) : super(key: key);
@@ -13,10 +14,35 @@ class AccountWalletsView extends StatefulWidget {
 }
 
 class _AccountWalletsViewState extends State<AccountWalletsView> {
+  final StreamController<List<Wallet>> _walletStreamController =
+      StreamController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWallets();
+  }
+
+  Future<List<Wallet>> _fetchWallets() async {
+    try {
+      final wallets = await WalletRepository.fetchAll();
+      _walletStreamController.add(wallets);
+
+      return wallets;
+    } catch (e) {
+      _walletStreamController.addError(e);
+      return [];
+    }
+  }
+
   void _addWallet(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AddWalletDialog(),
+    ).then(
+      (wallet) => {
+        if (wallet != null) {_fetchWallets()},
+      },
     );
   }
 
@@ -44,8 +70,8 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Wallet>>(
-        future: WalletRepository.fetchAll(),
+      body: StreamBuilder<List<Wallet>>(
+        stream: _walletStreamController.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -61,12 +87,17 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
                     itemBuilder: (context, index) {
                       final wallet = wallets[index];
                       return ListTile(
-                        title: Text("${wallet.currency}"),
-                        subtitle: Text("Balance: ${wallet.value}"),
-                        trailing: IconButton(
-                          icon: Icon(Icons.add, color: Colors.green[500]),
-                          onPressed: () => _addMoneyToFiat(wallet),
+                        title: Text('${wallet.currency}'),
+                        subtitle: Text(
+                          '${AppLocalizations.of(context).translate('wallets_balance')}: ${wallet.value}',
                         ),
+                        trailing:
+                            wallet.isCrypto == false
+                                ? IconButton(
+                                  icon: Icon(Icons.add, color: Colors.green),
+                                  onPressed: () => _addMoneyToFiat(wallet),
+                                )
+                                : null,
                       );
                     },
                   ),

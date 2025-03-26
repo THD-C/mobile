@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/l10n/app_localizations.dart';
-import 'package:mobile/models/crypto_currency.dart';
-import 'package:mobile/models/fiat_currency.dart';
+import 'package:mobile/models/currency.dart';
 import 'package:mobile/tools/api_servicer/api_payment.dart';
-import 'package:mobile/tools/repository/market_repository.dart';
 import 'package:mobile/widgets/currency/currency_selector.dart';
+import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonateDialog extends StatefulWidget {
@@ -17,26 +17,25 @@ class DonateDialog extends StatefulWidget {
 
 class _DonateDialogState extends State<DonateDialog> {
   late final TextEditingController currencyController = TextEditingController(
-    text: 'USD',
+    text: AppConfig().defaultCurrency.name,
   );
   late final TextEditingController nominalController = TextEditingController(
     text: '1',
   );
 
-  FiatCurrency? _selectedFiatCurrency;
-  final List<FiatCurrency> availableCurrencies = [
-    FiatCurrency(name: 'USD'),
-    FiatCurrency(name: 'EUR'),
-    FiatCurrency(name: 'GBP'),
-    FiatCurrency(name: 'PLN'),
+  Currency? _selectedFiatCurrency;
+  final List<Currency> availableCurrencies = [
+    Currency(name: 'USD'),
+    Currency(name: 'EUR'),
+    Currency(name: 'GBP'),
+    Currency(name: 'PLN'),
   ];
 
-  bool _isLoading = true;
   String? _errorMessage;
 
   @override
   void initState() {
-    _onCurrencySelected(FiatCurrency(name: 'USD'));
+    _onCurrencySelected(Currency(name: AppConfig().defaultCurrency.name));
 
     super.initState();
   }
@@ -51,7 +50,6 @@ class _DonateDialogState extends State<DonateDialog> {
   Future<void> _donate() async {
     try {
       setState(() {
-        _isLoading = true;
         _errorMessage = null;
       });
 
@@ -78,7 +76,6 @@ class _DonateDialogState extends State<DonateDialog> {
         _errorMessage = AppLocalizations.of(
           context,
         ).translate("donate_dialog_donate_data_error");
-        _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -158,7 +155,7 @@ class _DonateDialogState extends State<DonateDialog> {
     );
   }
 
-  void _onCurrencySelected(FiatCurrency currency) {
+  void _onCurrencySelected(Currency currency) {
     setState(() {
       _selectedFiatCurrency = currency;
       currencyController.value = TextEditingValue(
