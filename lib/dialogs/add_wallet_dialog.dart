@@ -18,7 +18,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
   late final TextEditingController currencyController = TextEditingController();
 
   Currency? _selectedCurrency;
-  late final List<Currency> availableCurrencies;
+  late List<Currency> availableCurrencies = [];
 
   @override
   void initState() {
