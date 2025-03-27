@@ -77,4 +77,4 @@ Recommended key naming convention:
 }
 ```
 
-After adding new translations the must be restarted.
+After adding new translations the application must be restarted.
