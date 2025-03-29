@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^6.3.0
   shared_preferences: ^2.5.2
   url_launcher: ^6.3.1
+  syncfusion_flutter_charts: ^29.1.33 # Check for the latest version
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
