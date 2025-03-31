@@ -78,3 +78,17 @@ Recommended key naming convention:
 ```
 
 After adding new translations the application must be restarted.
+
+### Authorization
+
+Authorization is based on JWT token which is held in SharedPreferences under the name <b>jwt_token</b>
+
+Handling of the token and session is controlled by the methods implemented in [lib/tools/token_handler.dart](/lib/tools/token_handler.dart).
+
+When handling the requests it needs to be controlled when the API responds with status code 401.
+Whet this status code is present following method should be used:
+
+```
+logout(BuildContext context)
+```
+This method takes context as a parameter to completely logout the user and redirects him to login page.
