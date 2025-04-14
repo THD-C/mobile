@@ -7,6 +7,7 @@ import 'package:mobile/models/coin.dart';
 import 'package:mobile/models/currency.dart';
 import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:mobile/widgets/order/order_dialog.dart';
 
 enum ChartType { line, candle }
 
@@ -26,7 +27,6 @@ class ChartDataPoint {
     this.close,
   });
 }
-
 
 class CryptoDetail extends StatefulWidget {
   final Coin cryptocurrency;
@@ -53,28 +53,40 @@ class _CryptoDetailState extends State<CryptoDetail> {
   void _generateRandomData() {
     final random = Random();
     final List<ChartDataPoint> dataPoints = [];
-    double lastPrice = widget.cryptocurrency.currentPrice > 0
-        ? widget.cryptocurrency.currentPrice
-        : 10000; // Start near current price or a default
+    double lastPrice =
+        widget.cryptocurrency.currentPrice > 0
+            ? widget.cryptocurrency.currentPrice
+            : 10000; // Start near current price or a default
     double open = lastPrice;
-    DateTime date = DateTime.now().subtract(const Duration(days: 60)); // Start date
+    DateTime date = DateTime.now().subtract(
+      const Duration(days: 60),
+    ); // Start date
 
     // Generate 60 data points for example
     for (int i = 0; i < 60; i++) {
       double high, low, close;
-      close = open +
+      close =
+          open +
           random.nextDouble() * (open * 0.1) - // Fluctuate up to 10%
           (open * 0.05);
       if (close <= 0) close = open * 0.5; // Ensure positive close
 
       if (open > close) {
         // Bearish candle
-        high = open + random.nextDouble() * (open * 0.02); // High slightly above open
-        low = close - random.nextDouble() * (open * 0.02); // Low slightly below close
+        high =
+            open +
+            random.nextDouble() * (open * 0.02); // High slightly above open
+        low =
+            close -
+            random.nextDouble() * (open * 0.02); // Low slightly below close
       } else {
         // Bullish candle
-        high = close + random.nextDouble() * (open * 0.02); // High slightly above close
-        low = open - random.nextDouble() * (open * 0.02); // Low slightly below open
+        high =
+            close +
+            random.nextDouble() * (open * 0.02); // High slightly above close
+        low =
+            open -
+            random.nextDouble() * (open * 0.02); // Low slightly below open
       }
       if (low <= 0) low = close * 0.5; // Ensure positive low
 
@@ -98,6 +110,17 @@ class _CryptoDetailState extends State<CryptoDetail> {
   }
   // --- End Random Data Generation ---
 
+  void _showOrderDialog({required bool isBuy}) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => OrderDialogWidget(
+            cryptoName: widget.cryptocurrency.name,
+            cryptoPrice: widget.cryptocurrency.currentPrice,
+            isBuy: isBuy,
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,12 +142,14 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       _buildTextRow('Wybór fiat'),
                       const SizedBox(height: 8),
                       FiatCurrencySelector(
-                        selectedCurrency: Currency(name: 'USD'), // Consider making this stateful
+                        selectedCurrency: Currency(
+                          name: 'USD',
+                        ), // Consider making this stateful
                         onCurrencySelected: (currency) {
                           Logger().i('Selected Currency: ${currency.name}');
                           // TODO: Potentially refetch data or update prices based on currency
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -143,11 +168,14 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
-                        AppLocalizations.of(context).translate('market_change_24h'),
+                        AppLocalizations.of(
+                          context,
+                        ).translate('market_change_24h'),
                         '${widget.cryptocurrency.priceChangePercentage24h > 0 ? "+" : ""}${widget.cryptocurrency.priceChangePercentage24h.toStringAsFixed(2)}%',
-                        valueColor: widget.cryptocurrency.priceChangePercentage24h >= 0
-                            ? Colors.green
-                            : Colors.red,
+                        valueColor:
+                            widget.cryptocurrency.priceChangePercentage24h >= 0
+                                ? Colors.green
+                                : Colors.red,
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
@@ -187,6 +215,44 @@ class _CryptoDetailState extends State<CryptoDetail> {
                         height: 350, // Adjust height as needed
                         child: _buildSyncfusionChart(), // Use Syncfusion chart
                       ),
+                      // BUY and SELL Buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              _showOrderDialog(isBuy: false);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                            ),
+                            child: const Text(
+                              'SELL',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _showOrderDialog(isBuy: true);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 12,
+                              ),
+                            ),
+                            child: const Text(
+                              'BUY',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -204,9 +270,15 @@ class _CryptoDetailState extends State<CryptoDetail> {
     bool isSelected = _selectedChartType == type;
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor: isSelected ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3) : null,
+        backgroundColor:
+            isSelected
+                ? Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withOpacity(0.3)
+                : null,
         side: BorderSide(
-          color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+          color:
+              isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -222,7 +294,10 @@ class _CryptoDetailState extends State<CryptoDetail> {
       child: Text(
         label,
         style: TextStyle(
-          color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodyLarge?.color,
+          color:
+              isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).textTheme.bodyLarge?.color,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
@@ -241,19 +316,24 @@ class _CryptoDetailState extends State<CryptoDetail> {
     // ^^^ Use CartesianSeries as the base type for the list
 
     if (_selectedChartType == ChartType.line) {
-      series = <CartesianSeries<ChartDataPoint, DateTime>>[ // Keep specific type here too
+      series = <CartesianSeries<ChartDataPoint, DateTime>>[
+        // Keep specific type here too
         LineSeries<ChartDataPoint, DateTime>(
           dataSource: _chartData,
           xValueMapper: (ChartDataPoint data, _) => data.timestamp,
-          yValueMapper: (ChartDataPoint data, _) => data.high, // Using high for line value
+          yValueMapper:
+              (ChartDataPoint data, _) =>
+                  data.high, // Using high for line value
           name: widget.cryptocurrency.name,
           color: Theme.of(context).colorScheme.primary,
           width: 2,
           enableTooltip: true,
-        )
+        ),
       ];
-    } else { // ChartType.candle
-      series = <CartesianSeries<ChartDataPoint, DateTime>>[ // Keep specific type here too
+    } else {
+      // ChartType.candle
+      series = <CartesianSeries<ChartDataPoint, DateTime>>[
+        // Keep specific type here too
         CandleSeries<ChartDataPoint, DateTime>(
           dataSource: _chartData,
           xValueMapper: (ChartDataPoint data, _) => data.timestamp,
@@ -267,7 +347,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
           // Example: Customize colors based on price movement
           bearColor: Colors.red,
           bullColor: Colors.green,
-        )
+        ),
       ];
     }
 
@@ -284,14 +364,16 @@ class _CryptoDetailState extends State<CryptoDetail> {
         majorTickLines: const MajorTickLines(size: 0),
         axisLine: const AxisLine(width: 0),
         // Optional: Improve number formatting based on magnitude
-        numberFormat: NumberFormat.compactSimpleCurrency(locale: 'en_US'), // e.g., $1.5K, $2M
+        numberFormat: NumberFormat.compactSimpleCurrency(
+          locale: 'en_US',
+        ), // e.g., $1.5K, $2M
       ),
       series: series, // Now the list type matches the parameter type
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
-          enablePanning: true,
-          enablePinching: true,
-          zoomMode: ZoomMode.x
+        enablePanning: true,
+        enablePinching: true,
+        zoomMode: ZoomMode.x,
       ),
       trackballBehavior: TrackballBehavior(
         enable: true,
@@ -299,9 +381,10 @@ class _CryptoDetailState extends State<CryptoDetail> {
         tooltipSettings: InteractiveTooltip(
           enable: true,
           // More detailed candle tooltip format
-          format: _selectedChartType == ChartType.candle
-              ? 'Date: point.x\nOpen: point.open\nHigh: point.high\nLow: point.low\nClose: point.close'
-              : 'Date: point.x\nPrice: point.y',
+          format:
+              _selectedChartType == ChartType.candle
+                  ? 'Date: point.x\nOpen: point.open\nHigh: point.high\nLow: point.low\nClose: point.close'
+                  : 'Date: point.x\nPrice: point.y',
           // Optional: Style the tooltip
           // color: Colors.black87,
           // textStyle: TextStyle(color: Colors.white),
@@ -335,7 +418,10 @@ class _CryptoDetailState extends State<CryptoDetail> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
