@@ -72,9 +72,10 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
 
     final value = double.tryParse(specificPriceController.text);
     setState(() {
-      _specificPriceError = (value == null || value <= 0)
-          ? 'Specific price must be greater than 0'
-          : null;
+      _specificPriceError =
+          (value == null || value <= 0)
+              ? 'Specific price must be greater than 0'
+              : null;
     });
   }
 
@@ -109,9 +110,13 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
             const SizedBox(height: 16),
             Row(
               children: [
+                Expanded(child: _buildDropdown(['USD (1,000.00)'])),
+              ],
+            ),
+            Row(
+              children: [
                 Expanded(child: _buildTextField('Amount', amountController)),
                 const SizedBox(width: 10),
-                Expanded(child: _buildDropdown(['USD (1,000.00)'])),
               ],
             ),
             const SizedBox(height: 10),
@@ -119,7 +124,6 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
               children: [
                 Expanded(child: _buildTextField('Nominal', nominalController)),
                 const SizedBox(width: 10),
-                Expanded(child: _buildDropdown([widget.cryptoName])),
               ],
             ),
             const SizedBox(height: 16),
@@ -142,15 +146,15 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
           child: const Text('CANCEL'),
         ),
         ElevatedButton(
-          onPressed: isFormValid
-              ? () {
-                  // TODO: Handle the actual order logic here
-                  Navigator.pop(context);
-                }
-              : null,
+          onPressed:
+              isFormValid
+                  ? () {
+                    // TODO: Handle the actual order logic here
+                    Navigator.pop(context);
+                  }
+                  : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                widget.isBuy ? Colors.green : Colors.red,
+            backgroundColor: widget.isBuy ? Colors.green : Colors.red,
           ),
           child: const Text('CONFIRM ORDER'),
         ),
@@ -165,12 +169,8 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   }) {
     return TextField(
       controller: controller,
-      keyboardType:
-          const TextInputType.numberWithOptions(decimal: true),
-      decoration: InputDecoration(
-        labelText: label,
-        errorText: errorText,
-      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(labelText: label, errorText: errorText),
     );
   }
 
@@ -178,7 +178,9 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     return DropdownButtonFormField<String>(
       value: options.first,
       items:
-          options.map((o) => DropdownMenuItem(value: o, child: Text(o))).toList(),
+          options
+              .map((o) => DropdownMenuItem(value: o, child: Text(o)))
+              .toList(),
       onChanged: (_) {},
     );
   }
