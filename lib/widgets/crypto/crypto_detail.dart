@@ -7,7 +7,7 @@ import 'package:mobile/models/coin.dart';
 import 'package:mobile/models/currency.dart';
 import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:mobile/widgets/order/order_dialog.dart';
+import 'package:mobile/dialogs/order_dialog.dart';
 
 enum ChartType { line, candle }
 
