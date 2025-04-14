@@ -19,38 +19,46 @@ class OrderDialogWidget extends StatefulWidget {
 class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController nominalController = TextEditingController();
-  String orderType = 'instant';
 
-  bool _isUpdatingAmount = false;
-  bool _isUpdatingNominal = false;
+  bool _isUpdatingFromAmount = false;
+  bool _isUpdatingFromNominal = false;
+
+  String orderType = 'instant';
 
   @override
   void initState() {
     super.initState();
 
-    amountController.addListener(() {
-      if (_isUpdatingNominal) return;
-      final amount = double.tryParse(amountController.text);
-      if (amount != null) {
-        _isUpdatingAmount = true;
-        nominalController.text = (amount * widget.cryptoPrice).toStringAsFixed(
-          2,
-        );
-        _isUpdatingAmount = false;
-      }
-    });
+    amountController.addListener(_onAmountChanged);
+    nominalController.addListener(_onNominalChanged);
+  }
 
-    nominalController.addListener(() {
-      if (_isUpdatingAmount) return;
-      final nominal = double.tryParse(nominalController.text);
-      if (nominal != null && widget.cryptoPrice != 0) {
-        _isUpdatingNominal = true;
-        amountController.text = (nominal / widget.cryptoPrice).toStringAsFixed(
-          6,
-        );
-        _isUpdatingNominal = false;
-      }
-    });
+  void _onAmountChanged() {
+    if (_isUpdatingFromNominal) return;
+
+    final amount = double.tryParse(amountController.text);
+    if (amount != null) {
+      _isUpdatingFromAmount = true;
+      final nominal = amount / widget.cryptoPrice;
+      setState(() {
+        nominalController.text = nominal.toStringAsFixed(6);
+      });
+      _isUpdatingFromAmount = false;
+    }
+  }
+
+  void _onNominalChanged() {
+    if (_isUpdatingFromAmount) return;
+
+    final nominal = double.tryParse(nominalController.text);
+    if (nominal != null && widget.cryptoPrice > 0) {
+      _isUpdatingFromNominal = true;
+      final amount = nominal * widget.cryptoPrice;
+      setState(() {
+        amountController.text = amount.toStringAsFixed(2);
+      });
+      _isUpdatingFromNominal = false;
+    }
   }
 
   @override
@@ -101,7 +109,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
         ),
         ElevatedButton(
           onPressed: () {
-            // TODO: Implement order confirmation logic here
+            // TODO: Add confirmation logic
             Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
@@ -116,10 +124,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return TextField(
       controller: controller,
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: true,
-        signed: false,
-      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(labelText: label),
     );
   }
