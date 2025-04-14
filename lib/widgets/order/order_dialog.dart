@@ -19,18 +19,24 @@ class OrderDialogWidget extends StatefulWidget {
 class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController nominalController = TextEditingController();
+  final TextEditingController specificPriceController = TextEditingController();
 
   bool _isUpdatingFromAmount = false;
   bool _isUpdatingFromNominal = false;
 
   String orderType = 'instant';
+  String? _specificPriceError;
 
   @override
   void initState() {
     super.initState();
 
+    // Default value for specific price
+    specificPriceController.text = widget.cryptoPrice.toStringAsFixed(2);
+
     amountController.addListener(_onAmountChanged);
     nominalController.addListener(_onNominalChanged);
+    specificPriceController.addListener(_validateSpecificPrice);
   }
 
   void _onAmountChanged() {
@@ -61,10 +67,30 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     }
   }
 
+  void _validateSpecificPrice() {
+    if (orderType != 'pending') return;
+
+    final value = double.tryParse(specificPriceController.text);
+    setState(() {
+      _specificPriceError = (value == null || value <= 0)
+          ? 'Specific price must be greater than 0'
+          : null;
+    });
+  }
+
+  bool get isFormValid {
+    if (orderType == 'pending') {
+      final value = double.tryParse(specificPriceController.text);
+      if (value == null || value <= 0) return false;
+    }
+    return true;
+  }
+
   @override
   void dispose() {
     amountController.dispose();
     nominalController.dispose();
+    specificPriceController.dispose();
     super.dispose();
   }
 
@@ -99,6 +125,14 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
             const SizedBox(height: 16),
             _buildRadioOption('Instant', 'instant'),
             _buildRadioOption('Pending', 'pending'),
+            if (orderType == 'pending') ...[
+              const SizedBox(height: 12),
+              _buildTextField(
+                'Specific price',
+                specificPriceController,
+                errorText: _specificPriceError,
+              ),
+            ],
           ],
         ),
       ),
@@ -108,12 +142,15 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
           child: const Text('CANCEL'),
         ),
         ElevatedButton(
-          onPressed: () {
-            // TODO: Add confirmation logic
-            Navigator.pop(context);
-          },
+          onPressed: isFormValid
+              ? () {
+                  // TODO: Handle the actual order logic here
+                  Navigator.pop(context);
+                }
+              : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: widget.isBuy ? Colors.green : Colors.red,
+            backgroundColor:
+                widget.isBuy ? Colors.green : Colors.red,
           ),
           child: const Text('CONFIRM ORDER'),
         ),
@@ -121,11 +158,19 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    String? errorText,
+  }) {
     return TextField(
       controller: controller,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      decoration: InputDecoration(labelText: label),
+      keyboardType:
+          const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        labelText: label,
+        errorText: errorText,
+      ),
     );
   }
 
@@ -133,9 +178,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     return DropdownButtonFormField<String>(
       value: options.first,
       items:
-          options
-              .map((o) => DropdownMenuItem(value: o, child: Text(o)))
-              .toList(),
+          options.map((o) => DropdownMenuItem(value: o, child: Text(o))).toList(),
       onChanged: (_) {},
     );
   }
@@ -146,7 +189,12 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
       leading: Radio<String>(
         value: value,
         groupValue: orderType,
-        onChanged: (val) => setState(() => orderType = val!),
+        onChanged: (val) {
+          setState(() {
+            orderType = val!;
+            _validateSpecificPrice();
+          });
+        },
         activeColor: Theme.of(context).colorScheme.primary,
       ),
       title: Text(
