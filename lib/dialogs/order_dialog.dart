@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/tools/api_servicer/api_wallet.dart';
 
 class OrderDialogWidget extends StatefulWidget {
   final String cryptoName;
@@ -27,16 +28,35 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   String orderType = 'instant';
   String? _specificPriceError;
 
+  List wallets = [];
+  Map<String, dynamic>? selectedWallet;
+
   @override
   void initState() {
     super.initState();
 
-    // Default value for specific price
     specificPriceController.text = widget.cryptoPrice.toStringAsFixed(2);
-
     amountController.addListener(_onAmountChanged);
     nominalController.addListener(_onNominalChanged);
     specificPriceController.addListener(_validateSpecificPrice);
+
+    _loadWallets();
+  }
+
+  Future<void> _loadWallets() async {
+    try {
+      final result = await WalletApiService().read(
+        context,
+      );
+      if (mounted) {
+        setState(() {
+          wallets = result;
+          selectedWallet = wallets.isNotEmpty ? wallets.first : null;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading wallets: $e');
+    }
   }
 
   void _onAmountChanged() {
@@ -110,7 +130,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildDropdown(['USD (1,000.00)'])),
+                Expanded(child: _buildWalletDropdown()),
               ],
             ),
             Row(
@@ -174,14 +194,24 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     );
   }
 
-  Widget _buildDropdown(List<String> options) {
-    return DropdownButtonFormField<String>(
-      value: options.first,
+  Widget _buildWalletDropdown() {
+    if (wallets.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return DropdownButtonFormField<Map<String, dynamic>>(
+      value: selectedWallet,
       items:
-          options
-              .map((o) => DropdownMenuItem(value: o, child: Text(o)))
-              .toList(),
-      onChanged: (_) {},
+          wallets.map((wallet) {
+            final currency = wallet['currency'] ?? 'Unknown';
+            final balance = wallet['value'] ?? 0;
+            return DropdownMenuItem<Map<String, dynamic>>(
+              value: wallet,
+              child: Text('$currency ($balance)'),
+            );
+          }).toList(),
+      onChanged: (wallet) => setState(() => selectedWallet = wallet),
+      decoration: const InputDecoration(labelText: 'Select Wallet'),
     );
   }
 
