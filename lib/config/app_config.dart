@@ -23,6 +23,8 @@ class AppConfig {
 
   String get portfolioApiUrl => '$_apiBaseUrl/statistics/portfolio-diversity';
 
+  String get orderApiUrl => '$_apiBaseUrl/order';
+
   Currency get defaultCurrency => Currency(name: 'USD');
 
   void initialize({String? apiBaseUrl}) {

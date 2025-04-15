@@ -4,7 +4,7 @@ import 'package:mobile/config/app_config.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class OrderApiService {
-  final String _baseUrl = AppConfig().oderApiUrl;
+  final String _baseUrl = AppConfig().orderApiUrl;
   static Map<String, String> _headers(String token) => {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer $token',
