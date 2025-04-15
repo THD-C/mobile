@@ -3,12 +3,12 @@ import 'package:mobile/models/coin.dart';
 import 'package:mobile/views/market/market_crypto_list_item.dart';
 import 'package:mobile/views/market/market_crypto_detail.dart';
 
-class CryptoListView extends StatelessWidget {
+class MarketCryptoList extends StatelessWidget {
   final CoinList cryptocurrencies;
   final Future<void> Function() onRefresh;
   final bool showPriceRange;
 
-  const CryptoListView({
+  const MarketCryptoList({
     required this.cryptocurrencies,
     required this.onRefresh,
     required this.showPriceRange,
@@ -27,7 +27,7 @@ class CryptoListView extends StatelessWidget {
           padding: const EdgeInsets.only(top: 0), // Add this line to remove padding at the top of ListView
           itemBuilder: (context, index) {
             final crypto = cryptocurrencies[index];
-            return CryptoListItem(
+            return MarketCryptoListItem(
               cryptocurrency: crypto,
               showPriceRange: showPriceRange,
               onTap: () {

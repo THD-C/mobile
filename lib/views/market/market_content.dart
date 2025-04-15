@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/coin.dart';
-
-import 'market_crypto_list.dart';
+import 'package:mobile/views/market/market_crypto_list.dart';
 
 class MarketContent extends StatelessWidget {
   final bool isLoading;
@@ -30,7 +29,7 @@ class MarketContent extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: CryptoListView(
+      child: MarketCryptoList(
         cryptocurrencies: cryptocurrencies,
         onRefresh: onRefresh,
         showPriceRange: showPriceRange,

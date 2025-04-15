@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/coin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CryptoListItem extends StatelessWidget {
+class MarketCryptoListItem extends StatelessWidget {
   final Coin cryptocurrency;
   final bool showPriceRange;
   final VoidCallback onTap;
 
-  const CryptoListItem({
+  const MarketCryptoListItem({
     required this.cryptocurrency,
     required this.showPriceRange,
     required this.onTap,
