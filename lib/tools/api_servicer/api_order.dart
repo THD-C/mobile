@@ -90,14 +90,38 @@ class OrderApiService {
     return data['orders'] ?? [];
   }
 
+  /// Get list of orders (with optional filters)
+  Future<List<dynamic>> getOrdersByWalletId(String walletId) async {
+    final uri = Uri.parse(
+      '$_baseUrl/orders/',
+    ).replace(queryParameters: {'wallet_id': walletId});
+    final token = await TokenHandler.loadToken();
+    if (token == null) {
+      throw Exception('Token is null');
+    }
+    final response = await http.get(uri, headers: _headers(token));
+    final data = _handleResponse(response);
+    return data['orders'] ?? [];
+  }
+
   /// Delete an order by ID
-  Future<Map<String, dynamic>> deleteOrder({required String orderId}) async {
-    final url = Uri.parse('$_baseUrl?order_id=$orderId');
+  Future<Map<String, dynamic>> deleteOrder(String orderId) async {
+    final url = Uri.parse('$_baseUrl/?order_id=$orderId');
     final token = await TokenHandler.loadToken();
     if (token == null) {
       throw Exception('Token is null');
     }
     final response = await http.delete(url, headers: _headers(token));
+    if (response.statusCode == 307 || response.statusCode == 308) {
+      final redirectUrl = response.headers['location'];
+      if (redirectUrl != null) {
+        final redirectedResponse = await http.post(
+          Uri.parse(redirectUrl),
+          headers: _headers(token),
+        );
+        return _handleResponse(redirectedResponse);
+      }
+    }
     return _handleResponse(response);
   }
 
