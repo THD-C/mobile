@@ -18,7 +18,11 @@ class AppConfig {
   String get walletApiUrl => '$_apiBaseUrl/wallets';
 
   String get userApiUrl => '$_apiBaseUrl/user';
+
   String get paymentApiUrl => '$_apiBaseUrl/payments';
+
+  String get portfolioApiUrl => '$_apiBaseUrl/statistics/portfolio-diversity';
+
   Currency get defaultCurrency => Currency(name: 'USD');
 
   void initialize({String? apiBaseUrl}) {
