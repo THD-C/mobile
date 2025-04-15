@@ -42,11 +42,13 @@ class PortfolioViewState extends State<PortfolioView> {
       // Load all available fiat currencies
       _fiatCurrencyList = await CurrencyRepository.fetchAllFiat();
 
-      if (_fiatCurrencyList.currencies.isNotEmpty && _selectedFiatCurrency == null) {
+      if (_fiatCurrencyList.currencies.isNotEmpty &&
+          _selectedFiatCurrency == null) {
         _selectedFiatCurrency = _fiatCurrencyList.currencies.first;
       }
 
-      String fiatCurrency = _selectedFiatCurrency?.name ??
+      String fiatCurrency =
+          _selectedFiatCurrency?.name ??
           AppConfig().defaultCurrency.name.toLowerCase();
 
       _portfolioData = await PortfolioRepository.fetchPortfolioDiversity(
@@ -54,7 +56,8 @@ class PortfolioViewState extends State<PortfolioView> {
         fiatCurrency,
       );
     } catch (e) {
-      _errorMessage = AppLocalizations.of(context).translate('portfolio_error_loading') ??
+      _errorMessage =
+          AppLocalizations.of(context).translate('portfolio_error_loading') ??
           'Failed to load portfolio data';
     } finally {
       if (mounted) {
@@ -90,8 +93,10 @@ class PortfolioViewState extends State<PortfolioView> {
         children: [
           Card(
             elevation: 2,
-            margin: const EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 8.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 0.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
