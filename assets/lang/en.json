@@ -125,5 +125,7 @@
   "delete_title": "Usuwanie!",
   "delete_confirmation_question": "Are you sure you want to proceed?",
   "delete_cancel": "Cancel",
-  "delete_confirm": "Confirm"
+  "delete_confirm": "Confirm",
+
+  "portfolio_error_loading": "Error while loading portfolio"
 }

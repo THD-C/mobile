@@ -130,5 +130,7 @@
   "delete_title": "Usuwanie",
   "delete_confirmation_question": "Czy na pewno chcesz kontynuować?",
   "delete_cancel": "Anuluj",
-  "delete_confirm": "Potwierdź"
+  "delete_confirm": "Potwierdź",
+
+  "portfolio_error_loading": "Błąd podczas ładowania portfolio"
 }
