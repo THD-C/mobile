@@ -23,29 +23,32 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     _ordersFuture = _fetchOrders();
   }
 
-Future<List<Map<String, dynamic>>> _fetchOrders() async {
-  // Fetch orders
-  final orders = await OrderApiService().getOrdersByWalletId(widget.wallet.id);
-  final ordersList = List<Map<String, dynamic>>.from(orders);
+  Future<List<Map<String, dynamic>>> _fetchOrders() async {
+    // Fetch orders
+    final orders = await OrderApiService().getOrdersByWalletId(
+      widget.wallet.id,
+    );
+    final ordersList = List<Map<String, dynamic>>.from(orders);
 
-  // Fetch wallets and create an ID-to-name map
-  final walletList = await WalletApiService().read(context);
-  final walletMap = {
-    for (var wallet in walletList)
-      '${wallet['id']}': wallet['currency'] ?? 'Unknown'
-  };
+    // Fetch wallets and create an ID-to-name map
+    final walletList = await WalletApiService().read(context);
+    final walletMap = {
+      for (var wallet in walletList)
+        '${wallet['id']}': wallet['currency'] ?? 'Unknown',
+    };
 
-  // Replace wallet IDs with their corresponding names
-  for (var order in ordersList) {
-    final fiatId = order['fiat_wallet_id']?.toString();
-    final cryptoId = order['crypto_wallet_id']?.toString();
+    // Replace wallet IDs with their corresponding names
+    for (var order in ordersList) {
+      final fiatId = order['fiat_wallet_id']?.toString();
+      final cryptoId = order['crypto_wallet_id']?.toString();
 
-    order['fiatWallet'] = fiatId != null ? walletMap[fiatId] ?? fiatId : '-';
-    order['cryptoWallet'] = cryptoId != null ? walletMap[cryptoId] ?? cryptoId : '-';
+      order['fiatWallet'] = fiatId != null ? walletMap[fiatId] ?? fiatId : '-';
+      order['cryptoWallet'] =
+          cryptoId != null ? walletMap[cryptoId] ?? cryptoId : '-';
+    }
+
+    return ordersList;
   }
-
-  return ordersList;
-}
 
   String formatDate(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return '-';
@@ -55,6 +58,9 @@ Future<List<Map<String, dynamic>>> _fetchOrders() async {
   }
 
   Widget _buildOrderCard(Map<String, dynamic> order) {
+    final isSell = order['side'] == 'ORDER_SIDE_SELL';
+    final walletDisplay = isSell ? order['cryptoWallet'] : order['fiatWallet'];
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       elevation: 2,
@@ -85,7 +91,7 @@ Future<List<Map<String, dynamic>>> _fetchOrders() async {
             Text('Nominal: ${order['nominal'] ?? "-"}'),
             Text('Price: ${order['price'] ?? "-"}'),
             Text('Cash Qty: ${order['cash_quantity'] ?? "-"}'),
-            Text('Fiat Wallet: ${order['fiatWallet'] ?? "-"}'),
+            Text('Fiat Wallet: ${walletDisplay ?? "-"}'),
             const SizedBox(height: 4),
             Text('Created: ${formatDate(order['date_created'])}'),
             Text('Executed: ${formatDate(order['date_executed'])}'),
