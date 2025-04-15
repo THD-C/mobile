@@ -127,5 +127,7 @@
   "delete_cancel": "Cancel",
   "delete_confirm": "Confirm",
 
-  "portfolio_error_loading": "Error while loading portfolio"
+  "portfolio_error_loading": "Error while loading portfolio",
+  "portfolio_total_value" : "Total value",
+  "portfolio_empty": "Portfolio is empty"
 }
