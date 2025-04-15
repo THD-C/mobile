@@ -42,6 +42,8 @@ class _CryptoDetailState extends State<CryptoDetail> {
   // TooltipBehavior for chart interactions
   late TooltipBehavior _tooltipBehavior;
 
+  String selectedFiat = 'USD'; // Default fiat currency
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +117,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
       context: context,
       builder:
           (context) => OrderDialogWidget(
+            selectedFiat: selectedFiat,
             cryptoName: widget.cryptocurrency.name,
             cryptoPrice: widget.cryptocurrency.currentPrice,
             isBuy: isBuy,
@@ -143,9 +146,12 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       const SizedBox(height: 8),
                       FiatCurrencySelector(
                         selectedCurrency: Currency(
-                          name: 'USD',
+                          name: selectedFiat,
                         ), // Consider making this stateful
                         onCurrencySelected: (currency) {
+                          setState(() {
+                            selectedFiat = currency.name;
+                          });
                           Logger().i('Selected Currency: ${currency.name}');
                           // TODO: Potentially refetch data or update prices based on currency
                         },
@@ -304,7 +310,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
     );
   }
 
-  // Builds the Syncfusion Chart dynamically
   // Builds the Syncfusion Chart dynamically
   Widget _buildSyncfusionChart() {
     if (_chartData.isEmpty) {

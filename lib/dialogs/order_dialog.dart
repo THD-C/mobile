@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/tools/api_servicer/api_wallet.dart';
+import 'package:mobile/tools/api_servicer/api_order.dart';
 
 class OrderDialogWidget extends StatefulWidget {
   final String cryptoName;
   final double cryptoPrice;
   final bool isBuy;
 
+  final String selectedFiat;
+
   const OrderDialogWidget({
     super.key,
+    required this.selectedFiat,
     required this.cryptoName,
     required this.cryptoPrice,
     required this.isBuy,
@@ -40,18 +44,55 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     nominalController.addListener(_onNominalChanged);
     specificPriceController.addListener(_validateSpecificPrice);
 
-    _loadWallets();
+    _loadWallets(widget.selectedFiat);
   }
 
-  Future<void> _loadWallets() async {
+  Future<void> _loadWallets(String selectedFiat) async {
     try {
-      final result = await WalletApiService().read(
-        context,
-      );
-      if (mounted) {
-        setState(() {
-          wallets = result;
-          selectedWallet = wallets.isNotEmpty ? wallets.first : null;
+      final result = await WalletApiService().read(context);
+      if (!mounted) return;
+
+      setState(() {
+        wallets = result;
+
+        if (wallets.isEmpty) {
+          selectedWallet = null;
+        } else {
+          final matchingWallet =
+              wallets
+                  .where(
+                    (wallet) =>
+                        wallet['currency']?.toString().toUpperCase() ==
+                        selectedFiat.toUpperCase(),
+                  )
+                  .toList();
+
+          selectedWallet =
+              matchingWallet.isNotEmpty ? matchingWallet.first : null;
+        }
+      });
+
+      // Show alert and close if no wallet found
+      if (selectedWallet == null && mounted) {
+        await Future.delayed(Duration.zero); // Let build() finish
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder:
+              (ctx) => AlertDialog(
+                title: const Text('Wallet Required'),
+                content: const Text(
+                  'You need to create a FIAT currency wallet first.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+        ).then((_) {
+          if (mounted) Navigator.of(context).pop(); // Close Order Dialog
         });
       }
     } catch (e) {
@@ -124,13 +165,16 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Current ${widget.cryptoName} price: ${widget.cryptoPrice.toStringAsFixed(2)} USD',
+              'Current ${widget.cryptoName} price: ${widget.cryptoPrice.toStringAsFixed(2)} ${widget.selectedFiat.toUpperCase()}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildWalletDropdown()),
+                Text(
+                  'Wallet: ${selectedWallet?['currency'] ?? 'None'} (${selectedWallet?['value'] ?? ''})',
+                  style: const TextStyle(fontSize: 16),
+                ),
               ],
             ),
             Row(
@@ -168,9 +212,47 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
         ElevatedButton(
           onPressed:
               isFormValid
-                  ? () {
-                    // TODO: Handle the actual order logic here
-                    Navigator.pop(context);
+                  ? () async {
+                    try {
+                      final nominal = double.parse(nominalController.text);
+                      final amount = double.parse(amountController.text);
+                      final price =
+                          orderType == 'instant'
+                              ? widget.cryptoPrice
+                              : double.parse(specificPriceController.text);
+
+                      final type =
+                          orderType == 'instant'
+                              ? 'ORDER_TYPE_INSTANT'
+                              : 'ORDER_TYPE_PENDING';
+
+                      final side =
+                          widget.isBuy ? 'ORDER_SIDE_BUY' : 'ORDER_SIDE_SELL';
+
+                      final fiatWalletId = selectedWallet?['id'].toString();
+                      
+                      if (fiatWalletId == null || fiatWalletId.isEmpty) {
+                        throw Exception('Fiat wallet not selected');
+                      }
+
+                      await OrderApiService().createOrder(
+                        cashQuantity: amount,
+                        nominal: nominal,
+                        price: price,
+                        type: type,
+                        side: side,
+                        currencyTarget: widget.cryptoName.toLowerCase(),
+                        currencyUsedWalletId: fiatWalletId,
+                      );
+
+                      if (mounted) Navigator.pop(context);
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to place order: $e')),
+                        );
+                      }
+                    }
                   }
                   : null,
           style: ElevatedButton.styleFrom(
@@ -191,27 +273,6 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(labelText: label, errorText: errorText),
-    );
-  }
-
-  Widget _buildWalletDropdown() {
-    if (wallets.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return DropdownButtonFormField<Map<String, dynamic>>(
-      value: selectedWallet,
-      items:
-          wallets.map((wallet) {
-            final currency = wallet['currency'] ?? 'Unknown';
-            final balance = wallet['value'] ?? 0;
-            return DropdownMenuItem<Map<String, dynamic>>(
-              value: wallet,
-              child: Text('$currency ($balance)'),
-            );
-          }).toList(),
-      onChanged: (wallet) => setState(() => selectedWallet = wallet),
-      decoration: const InputDecoration(labelText: 'Select Wallet'),
     );
   }
 

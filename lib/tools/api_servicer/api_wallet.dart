@@ -16,7 +16,7 @@ class WalletApiService extends apiCalls {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.post(
-        Uri.parse("$_baseUrl"),
+        Uri.parse(_baseUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -61,7 +61,7 @@ class WalletApiService extends apiCalls {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.get(
-        Uri.parse("$_baseUrl"),
+        Uri.parse(_baseUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
