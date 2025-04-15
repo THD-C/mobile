@@ -16,7 +16,7 @@ class WalletApiService extends apiCalls {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.post(
-        Uri.parse("$_baseUrl"),
+        Uri.parse(_baseUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -57,24 +57,32 @@ class WalletApiService extends apiCalls {
   }
 
   @override
-  Future<List> read(BuildContext context) async {
+  Future<List<Map<String, dynamic>>> read(BuildContext context) async {
     try {
       final token = await TokenHandler.loadToken();
       final response = await http.get(
-        Uri.parse("$_baseUrl"),
+        Uri.parse(_baseUrl),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
+
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as List;
+        final data = jsonDecode(response.body);
+        if (data is Map<String, dynamic> && data.containsKey('wallets')) {
+          return (data['wallets'] as List)
+              .map((item) => item as Map<String, dynamic>)
+              .toList();
+        } else {
+          throw Exception("Unexpected response format: $data");
+        }
       } else {
         throw Exception("Failed to fetch wallets: ${response.body}");
       }
     } catch (e) {
-      debugPrint("Error in read: $e");
-      throw Exception(e);
+      debugPrint("Error in WalletApiService.read: $e");
+      throw Exception("Error reading wallets: $e");
     }
   }
 
