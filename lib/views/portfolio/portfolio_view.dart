@@ -90,7 +90,7 @@ class PortfolioViewState extends State<PortfolioView> {
         children: [
           Card(
             elevation: 2,
-            margin: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 8.0),
+            margin: const EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 8.0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
