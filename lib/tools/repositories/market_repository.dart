@@ -34,7 +34,6 @@ class MarketRepository {
     final token = await TokenHandler.loadToken();
     final fiatApiUrl = AppConfig().currencyApiUrl;
 
-    print('NOTHING' + CurrencyType.FIAT.toString());
     final response = await http.get(
       Uri.parse(
         '$fiatApiUrl/currencies?currency_type=${CurrencyType.FIAT.toString()}',
