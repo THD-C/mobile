@@ -5,12 +5,12 @@ import 'package:mobile/models/crypto_statistic.dart';
 import 'package:mobile/tools/token_handler.dart';
 
 class PortfolioRepository {
-  static Future<PortfolioDiversityResponse> fetchPortfolioDiversity(String userId, String currency) async {
+  static Future<PortfolioDiversityResponse> fetchPortfolioDiversity(String currency) async {
     final token = await TokenHandler.loadToken();
-    final apiBaseUrl = AppConfig().portfolioApiUrl;
+    final apiUrl = AppConfig().portfolioApiUrl;
 
     final response = await http.get(
-      Uri.parse('$apiBaseUrl/?user_id=$userId&currency=$currency'),
+      Uri.parse('$apiUrl/?currency=$currency'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

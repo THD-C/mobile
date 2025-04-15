@@ -52,7 +52,6 @@ class PortfolioViewState extends State<PortfolioView> {
           AppConfig().defaultCurrency.name.toLowerCase();
 
       _portfolioData = await PortfolioRepository.fetchPortfolioDiversity(
-        "1", // Use default wallet ID since we're not selecting wallets
         fiatCurrency,
       );
     } catch (e) {
@@ -76,7 +75,6 @@ class PortfolioViewState extends State<PortfolioView> {
 
     try {
       _portfolioData = await PortfolioRepository.fetchPortfolioDiversity(
-        "1", // Use default wallet ID
         currency.name,
       );
     } finally {
