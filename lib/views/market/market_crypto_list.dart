@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/coin.dart';
-import 'package:mobile/widgets/crypto/crypto_list_item.dart';
-import 'package:mobile/widgets/crypto/crypto_detail.dart';
+import 'package:mobile/views/market/crypto_list_item.dart';
+import 'package:mobile/views/market/crypto_detail.dart';
 
 class CryptoListView extends StatelessWidget {
   final CoinList cryptocurrencies;

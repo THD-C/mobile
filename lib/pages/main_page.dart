@@ -3,7 +3,7 @@ import 'package:mobile/l10n/app_localizations.dart';
 
 import 'package:mobile/views/account/account_view.dart';
 import 'package:mobile/views/blog/blog_view.dart';
-import 'package:mobile/views/markets_view.dart';
+import 'package:mobile/views/market/market_view.dart';
 import 'package:mobile/views/portfolio/portfolio_view.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _pages = <Widget>[
-    const MarketsView(),
+    const MarketView(),
     const BlogView(),
     const PortfolioView(),
     const AccountView(),
