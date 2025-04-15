@@ -13,7 +13,7 @@ void main() {
   runApp(const MyApp());
 }
 
-String baseURL = "http://10.0.10.30:80";
+String baseURL = "http://10.0.2.2:80";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
