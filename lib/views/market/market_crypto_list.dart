@@ -19,24 +19,28 @@ class CryptoListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: ListView.separated(
-        itemCount: cryptocurrencies.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
-        itemBuilder: (context, index) {
-          final crypto = cryptocurrencies[index];
-          return CryptoListItem(
-            cryptocurrency: crypto,
-            showPriceRange: showPriceRange,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CryptoDetail(cryptocurrency: crypto),
-                ),
-              );
-            },
-          );
-        },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 0), // Ensures no extra top padding
+        child: ListView.separated(
+          itemCount: cryptocurrencies.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          padding: const EdgeInsets.only(top: 0), // Add this line to remove padding at the top of ListView
+          itemBuilder: (context, index) {
+            final crypto = cryptocurrencies[index];
+            return CryptoListItem(
+              cryptocurrency: crypto,
+              showPriceRange: showPriceRange,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CryptoDetail(cryptocurrency: crypto),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

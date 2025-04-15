@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/currency.dart';
-
-import '../../widgets/currency/currency_selector.dart';
-import 'market_view_type_selector.dart';
+import 'package:mobile/views/market/market_currency_selector.dart';
+import 'package:mobile/views/market/market_view_type_selector.dart';
 
 class MarketHeader extends StatelessWidget {
   final bool showPriceRange;
@@ -24,7 +23,7 @@ class MarketHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 8.0),
+      margin: const EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
