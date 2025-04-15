@@ -79,9 +79,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    // Add delete functionality if needed
-                  },
+                  onPressed: () => _confirmDelete(order['id']),
                 ),
               ],
             ),
@@ -125,6 +123,34 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
           );
         },
       ),
+    );
+  }
+
+  void _confirmDelete(String orderId) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Order'),
+            content: const Text('Are you sure you want to delete this order?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.pop(context); // Close the dialog first
+                  await OrderApiService().deleteOrder(orderId);
+                  setState(() {
+                    _ordersFuture = _fetchOrders(); // Refresh the list
+                  });
+                },
+                child: const Text('Delete'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              ),
+            ],
+          ),
     );
   }
 }
