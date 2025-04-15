@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/coin.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CryptoListItem extends StatelessWidget {
   static const double fontSize = 12;
@@ -68,22 +69,29 @@ class CryptoListItem extends StatelessWidget {
   }
 
   Widget _getCryptoIcon(Coin crypto) {
-    final Map<String, IconData> cryptoIcons = {
-      'Bitcoin': Icons.currency_bitcoin,
-      'Ethereum': Icons.currency_exchange,
-      'Litecoin': Icons.currency_bitcoin,
-      'Ripple': Icons.currency_bitcoin,
-      'Cardano': Icons.currency_bitcoin,
-      'Dogecoin': Icons.currency_bitcoin,
-      'Polkadot': Icons.currency_bitcoin,
-      'Solana': Icons.currency_bitcoin,
-      'Binance Coin': Icons.currency_bitcoin,
-      'Tether': Icons.currency_bitcoin,
+    final Map<String, String> cryptoShortCodes = {
+      'Bitcoin': 'btc',
+      'Ethereum': 'eth',
+      'Litecoin': 'ltc',
+      'Ripple': 'xrp',
+      'Cardano': 'ada',
+      'Dogecoin': 'doge',
+      'Polkadot': 'dot',
+      'Solana': 'sol',
+      'Binance Coin': 'bnb',
+      'Tether': 'usdt',
     };
 
-    final IconData iconData =
-        cryptoIcons[crypto.name] ?? Icons.currency_exchange;
+    final String shortCode = cryptoShortCodes[crypto.name] ??
+        crypto.name.toLowerCase().replaceAll(' ', '_');
 
-    return Icon(iconData);
+    final String svgPath = 'assets/icons/$shortCode.svg';
+
+    return SvgPicture.asset(
+      svgPath,
+      width: 24,
+      height: 24,
+      placeholderBuilder: (context) => const Icon(Icons.currency_exchange),
+    );
   }
 }
