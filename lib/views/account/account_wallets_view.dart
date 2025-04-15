@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mobile/dialogs/delete_confirmation_dialog.dart';
 import 'package:mobile/dialogs/wallet/add_wallet_dialog.dart';
@@ -7,6 +6,7 @@ import 'package:mobile/dialogs/wallet/add_wallet_money_dialog.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/wallet.dart';
 import 'package:mobile/tools/repositories/wallet_repository.dart';
+import 'package:mobile/views/transaction_history_view.dart';
 
 class AccountWalletsView extends StatefulWidget {
   const AccountWalletsView({Key? key}) : super(key: key);
@@ -29,7 +29,6 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
     try {
       final wallets = await WalletRepository.fetchAll();
       _walletStreamController.add(wallets);
-
       return wallets;
     } catch (e) {
       _walletStreamController.addError(e);
@@ -41,22 +40,22 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
     showDialog(
       context: context,
       builder: (BuildContext context) => AddWalletDialog(),
-    ).then(
-      (wallet) => {
-        if (wallet != null) {_fetchWallets()},
-      },
-    );
+    ).then((wallet) {
+      if (wallet != null) {
+        _fetchWallets();
+      }
+    });
   }
 
   void _addMoneyToFiat(Wallet wallet) {
     showDialog(
       context: context,
       builder: (BuildContext context) => AddWalletMoneyDialog(wallet: wallet),
-    ).then(
-      (value) => {
-        if (value) {_fetchWallets()},
-      },
-    );
+    ).then((value) {
+      if (value) {
+        _fetchWallets();
+      }
+    });
   }
 
   void _showDeleteDialog(Wallet wallet) {
@@ -65,12 +64,26 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
       builder:
           (BuildContext context) =>
               DeleteConfirmationDialog(itemName: wallet.currency),
-    ).then(
-      (value) => {
-        if (value)
-          {WalletRepository.delete(wallet.id).then((_) => _fetchWallets())},
-      },
+    ).then((value) {
+      if (value) {
+        WalletRepository.delete(wallet.id).then((_) => _fetchWallets());
+      }
+    });
+  }
+
+  void _openTransactionHistory(Wallet wallet) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TransactionHistoryPage(wallet: wallet),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _walletStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -111,10 +124,12 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
                           '${AppLocalizations.of(context).translate('wallets_balance')}: ${wallet.value}',
                         ),
                         trailing: Row(
-                          mainAxisSize:
-                              MainAxisSize
-                                  .min, // Ensures row takes minimal space
+                          mainAxisSize: MainAxisSize.min,
                           children: [
+                            IconButton(
+                              icon: Icon(Icons.history, color: Colors.blue),
+                              onPressed: () => _openTransactionHistory(wallet),
+                            ),
                             IconButton(
                               icon: Icon(Icons.delete, color: Colors.red),
                               onPressed: () => _showDeleteDialog(wallet),
