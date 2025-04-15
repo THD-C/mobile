@@ -132,7 +132,9 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
       builder:
           (context) => AlertDialog(
             title: const Text('Delete Order'),
-            content: const Text('Are you sure you want to delete this order?'),
+            content: Text(
+              'Are you sure you want to delete order with ID $orderId?',
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -140,7 +142,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.pop(context); // Close the dialog first
+                  Navigator.pop(context); // Close the dialog
                   await OrderApiService().deleteOrder(orderId);
                   setState(() {
                     _ordersFuture = _fetchOrders(); // Refresh the list
