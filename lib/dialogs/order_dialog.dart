@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/tools/api_servicer/api_wallet.dart';
 import 'package:mobile/tools/api_servicer/api_order.dart';
@@ -43,6 +45,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     amountController.addListener(_onAmountChanged);
     nominalController.addListener(_onNominalChanged);
     specificPriceController.addListener(_validateSpecificPrice);
+    specificPriceController.addListener(_onAmountChanged);
 
     _loadWallets(widget.selectedFiat);
   }
@@ -106,7 +109,18 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     final amount = double.tryParse(amountController.text);
     if (amount != null) {
       _isUpdatingFromAmount = true;
-      final nominal = amount / widget.cryptoPrice;
+      double specificPrice;
+      try
+      {
+        specificPrice = double.parse(specificPriceController.text);
+      } catch (e) {
+        specificPrice = 1;
+      }
+
+      final nominal =
+          orderType == 'instant'
+              ? amount / widget.cryptoPrice
+              : amount / specificPrice;
       setState(() {
         nominalController.text = nominal.toStringAsFixed(6);
       });
@@ -120,7 +134,10 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
     final nominal = double.tryParse(nominalController.text);
     if (nominal != null && widget.cryptoPrice > 0) {
       _isUpdatingFromNominal = true;
-      final amount = nominal * widget.cryptoPrice;
+      final amount =
+          orderType == 'instant'
+              ? nominal * widget.cryptoPrice
+              : nominal * double.parse(specificPriceController.text);
       setState(() {
         amountController.text = amount.toStringAsFixed(2);
       });
@@ -230,7 +247,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
                           widget.isBuy ? 'ORDER_SIDE_BUY' : 'ORDER_SIDE_SELL';
 
                       final fiatWalletId = selectedWallet?['id'].toString();
-                      
+
                       if (fiatWalletId == null || fiatWalletId.isEmpty) {
                         throw Exception('Fiat wallet not selected');
                       }
@@ -286,6 +303,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
           setState(() {
             orderType = val!;
             _validateSpecificPrice();
+            _onAmountChanged();
           });
         },
         activeColor: Theme.of(context).colorScheme.primary,
