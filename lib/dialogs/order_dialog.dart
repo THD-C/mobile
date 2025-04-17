@@ -189,7 +189,7 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
             Row(
               children: [
                 Text(
-                  'Wallet: ${selectedWallet?['currency'] ?? 'None'} (${selectedWallet?['value'] ?? ''})',
+                  'Wallet: ${widget.selectedFiat.toUpperCase()} (${selectedWallet?['value'] ?? '-'})',
                   style: const TextStyle(fontSize: 16),
                 ),
               ],
