@@ -45,6 +45,8 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
       order['fiatWallet'] = fiatId != null ? walletMap[fiatId] ?? fiatId : '-';
       order['cryptoWallet'] =
           cryptoId != null ? walletMap[cryptoId] ?? cryptoId : '-';
+
+      order["date_executed"] = order["status"] != "ORDER_STATUS_PENDING" ? order["date_executed"] : "-";
     }
 
     return ordersList;
