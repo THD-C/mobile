@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:http/http.dart' as http;
 import 'package:mobile/config/app_config.dart';
@@ -6,6 +7,7 @@ import 'package:mobile/models/coin.dart';
 import 'package:mobile/models/currency.dart';
 import 'package:mobile/models/wallet.dart';
 import 'package:mobile/tools/token_handler.dart';
+import '../../models/historical_data.dart';
 
 class MarketRepository {
   static Future<CoinList> fetchCryptoCurrencies(String currency) async {
@@ -95,5 +97,38 @@ class MarketRepository {
             .toList();
 
     return CurrencyList(currencies: fiatCurrencies);
+  }
+
+  static Future<HistoricalData> fetchHistoricalDataForCoin(
+      String fiat,
+      String crypto,
+      String start,
+      String end,
+      bool ohlc
+  ) async {
+    final token = await TokenHandler.loadToken();
+    final cryptoApiUrl = AppConfig().cryptoApiUrl;
+
+    final response = await http.get(
+      Uri.parse('$cryptoApiUrl/historical-data?'
+          'currency=$fiat&'
+          'coin_id=$crypto&'
+          'start_date=$start&'
+          'end_date=$end&'
+          'ohlc_data=$ohlc'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Failed to load historical data: ${response.statusCode}',
+      );
+    }
+
+    final Map<String, dynamic> data = json.decode(response.body);
+    return HistoricalData.fromJson(data);
   }
 }

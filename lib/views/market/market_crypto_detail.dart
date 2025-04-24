@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import for date formatting
@@ -9,9 +10,11 @@ import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:mobile/dialogs/order_dialog.dart';
 
+import '../../models/historical_data.dart';
+import '../../tools/repositories/market_repository.dart';
+
 enum ChartType { line, candle }
 
-// Keep the data class (or adapt if Syncfusion needs a specific format)
 class ChartDataPoint {
   final DateTime timestamp;
   final double? open; // Nullable for line chart points
@@ -48,69 +51,37 @@ class _CryptoDetailState extends State<CryptoDetail> {
   void initState() {
     super.initState();
     _tooltipBehavior = TooltipBehavior(enable: true); // Initialize tooltip
-    _generateRandomData();
+    _getChartData();
   }
 
   // --- Random Data Generation (Adapted for Syncfusion) ---
-  void _generateRandomData() {
-    final random = Random();
+  void _getChartData() async {
+    HistoricalData _fiatCurrencyList = await MarketRepository.fetchHistoricalDataForCoin(
+        'usd',
+        'bitcoin',
+        '2025-04-10T18:11:26.348410',
+        '2025-04-11T18:11:26.348410',
+        true
+    );
+
     final List<ChartDataPoint> dataPoints = [];
-    double lastPrice =
-        widget.cryptocurrency.currentPrice > 0
-            ? widget.cryptocurrency.currentPrice
-            : 10000; // Start near current price or a default
-    double open = lastPrice;
-    DateTime date = DateTime.now().subtract(
-      const Duration(days: 60),
-    ); // Start date
 
-    // Generate 60 data points for example
-    for (int i = 0; i < 60; i++) {
-      double high, low, close;
-      close =
-          open +
-          random.nextDouble() * (open * 0.1) - // Fluctuate up to 10%
-          (open * 0.05);
-      if (close <= 0) close = open * 0.5; // Ensure positive close
-
-      if (open > close) {
-        // Bearish candle
-        high =
-            open +
-            random.nextDouble() * (open * 0.02); // High slightly above open
-        low =
-            close -
-            random.nextDouble() * (open * 0.02); // Low slightly below close
-      } else {
-        // Bullish candle
-        high =
-            close +
-            random.nextDouble() * (open * 0.02); // High slightly above close
-        low =
-            open -
-            random.nextDouble() * (open * 0.02); // Low slightly below open
-      }
-      if (low <= 0) low = close * 0.5; // Ensure positive low
-
+    for (DataChunk chunk in _fiatCurrencyList.chunks) {
       dataPoints.add(
         ChartDataPoint(
-          timestamp: date,
-          open: open,
-          high: high, // Use high as the value for line chart as well
-          low: low,
-          close: close,
+          timestamp: chunk.date,
+          open: chunk.open,
+          high: chunk.high, // Use high as the value for line chart as well
+          low: chunk.low,
+          close: chunk.close,
         ),
       );
-
-      open = close; // Next candle opens where the previous one closed
-      date = date.add(const Duration(days: 1)); // Increment date
     }
 
     setState(() {
       _chartData = dataPoints;
     });
   }
-  // --- End Random Data Generation ---
 
   void _showOrderDialog({required bool isBuy}) {
     showDialog(
@@ -292,8 +263,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
         if (_selectedChartType != type) {
           setState(() {
             _selectedChartType = type;
-            // Optional: Re-initialize tooltip if needed, though usually not required
-            // _tooltipBehavior = TooltipBehavior(enable: true);
           });
         }
       },
@@ -316,19 +285,16 @@ class _CryptoDetailState extends State<CryptoDetail> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // Change the list type here VVV
     List<CartesianSeries<ChartDataPoint, DateTime>> series = [];
-    // ^^^ Use CartesianSeries as the base type for the list
 
     if (_selectedChartType == ChartType.line) {
       series = <CartesianSeries<ChartDataPoint, DateTime>>[
-        // Keep specific type here too
         LineSeries<ChartDataPoint, DateTime>(
           dataSource: _chartData,
           xValueMapper: (ChartDataPoint data, _) => data.timestamp,
           yValueMapper:
               (ChartDataPoint data, _) =>
-                  data.high, // Using high for line value
+                  data.high,
           name: widget.cryptocurrency.name,
           color: Theme.of(context).colorScheme.primary,
           width: 2,
@@ -336,9 +302,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
         ),
       ];
     } else {
-      // ChartType.candle
       series = <CartesianSeries<ChartDataPoint, DateTime>>[
-        // Keep specific type here too
         CandleSeries<ChartDataPoint, DateTime>(
           dataSource: _chartData,
           xValueMapper: (ChartDataPoint data, _) => data.timestamp,
@@ -349,7 +313,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
           name: widget.cryptocurrency.name,
           enableTooltip: true,
           enableSolidCandles: true,
-          // Example: Customize colors based on price movement
           bearColor: Colors.red,
           bullColor: Colors.green,
         ),
@@ -359,7 +322,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
     return SfCartesianChart(
       primaryXAxis: DateTimeAxis(
         majorGridLines: const MajorGridLines(width: 0),
-        dateFormat: DateFormat.Md(),
+        dateFormat: DateFormat.yMd(),
         intervalType: DateTimeIntervalType.auto,
         edgeLabelPlacement: EdgeLabelPlacement.shift,
       ),
@@ -368,7 +331,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
         opposedPosition: false,
         majorTickLines: const MajorTickLines(size: 0),
         axisLine: const AxisLine(width: 0),
-        // Optional: Improve number formatting based on magnitude
         numberFormat: NumberFormat.compactSimpleCurrency(
           locale: 'en_US',
         ), // e.g., $1.5K, $2M
@@ -385,23 +347,18 @@ class _CryptoDetailState extends State<CryptoDetail> {
         activationMode: ActivationMode.singleTap,
         tooltipSettings: InteractiveTooltip(
           enable: true,
-          // More detailed candle tooltip format
           format:
               _selectedChartType == ChartType.candle
                   ? 'Date: point.x\nOpen: point.open\nHigh: point.high\nLow: point.low\nClose: point.close'
                   : 'Date: point.x\nPrice: point.y',
-          // Optional: Style the tooltip
-          // color: Colors.black87,
-          // textStyle: TextStyle(color: Colors.white),
         ),
         lineType: TrackballLineType.vertical,
         lineWidth: 1,
-        shouldAlwaysShow: false, // Only show when activated
+        shouldAlwaysShow: false,
       ),
     );
   }
 
-  // Keep original helper methods
   Widget _buildInfoRow(String label, String value, {Color? valueColor}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
