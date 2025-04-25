@@ -1,7 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/coin.dart';
@@ -46,6 +44,9 @@ class _CryptoDetailState extends State<CryptoDetail> {
   late TooltipBehavior _tooltipBehavior;
 
   String selectedFiat = 'USD'; // Default fiat currency
+  int chartDays= 1;
+  double? _yMin;
+  double? _yMax;
 
   @override
   void initState() {
@@ -56,12 +57,15 @@ class _CryptoDetailState extends State<CryptoDetail> {
 
   // --- Random Data Generation (Adapted for Syncfusion) ---
   void _getChartData() async {
+    DateTime currentDay = DateTime.now().subtract(Duration(hours: 2));
+    String end = currentDay.toIso8601String();
+    String start = currentDay.subtract(Duration(days: chartDays)).toIso8601String();
     HistoricalData _fiatCurrencyList = await MarketRepository.fetchHistoricalDataForCoin(
-        'usd',
-        'bitcoin',
-        '2025-04-10T18:11:26.348410',
-        '2025-04-11T18:11:26.348410',
-        true
+      selectedFiat.toLowerCase(),
+      widget.cryptocurrency.id,
+      start,
+      end,
+      true
     );
 
     final List<ChartDataPoint> dataPoints = [];
@@ -81,6 +85,19 @@ class _CryptoDetailState extends State<CryptoDetail> {
     setState(() {
       _chartData = dataPoints;
     });
+
+    double minY = _chartData.map((e) => e.low).reduce((a, b) => a < b ? a : b);
+    double maxY = _chartData.map((e) => e.high).reduce((a, b) => a > b ? a : b);
+
+    double buffer = (maxY - minY) * 0.1;
+    minY -= buffer;
+    maxY += buffer;
+
+    setState(() {
+      _chartData = dataPoints;
+      _yMin = minY;
+      _yMax = maxY;
+    });
   }
 
   void _showOrderDialog({required bool isBuy}) {
@@ -96,6 +113,50 @@ class _CryptoDetailState extends State<CryptoDetail> {
     );
   }
 
+  Widget _buildChartRangeButtons() {
+    final List<int> ranges = [1, 7, 30, 180, 365];
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      alignment: WrapAlignment.center,
+      children: ranges.map((int days) => _buildChartRangeButton(days)).toList(),
+    );
+  }
+
+  Widget _buildChartRangeButton(int days) {
+    bool isSelected = chartDays == days;
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: isSelected
+            ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
+            : null,
+        side: BorderSide(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Colors.grey,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: () {
+        if (chartDays != days) {
+          setState(() {
+            chartDays = days;
+          });
+          _getChartData();
+        }
+      },
+      child: Text(
+        '$days D',
+        style: TextStyle(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).textTheme.bodyLarge?.color,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,25 +167,24 @@ class _CryptoDetailState extends State<CryptoDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- Fiat Selector Card --- (Keep as is)
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextRow('Wybór fiat'),
+                      _buildTextRow('Fiat selection'),
                       const SizedBox(height: 8),
                       FiatCurrencySelector(
                         selectedCurrency: Currency(
                           name: selectedFiat,
-                        ), // Consider making this stateful
+                        ),
                         onCurrencySelected: (currency) {
                           setState(() {
                             selectedFiat = currency.name;
                           });
                           Logger().i('Selected Currency: ${currency.name}');
-                          // TODO: Potentially refetch data or update prices based on currency
+                          _getChartData();
                         },
                       ),
                     ],
@@ -132,7 +192,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
                 ),
               ),
               const SizedBox(height: 16),
-              // --- Info Card --- (Keep as is, but consider formatting based on selected currency)
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -140,7 +199,6 @@ class _CryptoDetailState extends State<CryptoDetail> {
                     children: [
                       _buildInfoRow(
                         AppLocalizations.of(context).translate('market_price'),
-                        // TODO: Format based on selected fiat currency
                         '\$${widget.cryptocurrency.currentPrice.toStringAsFixed(2)}',
                       ),
                       const SizedBox(height: 12),
@@ -156,14 +214,12 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
-                        '24h Max', // TODO: Localize
-                        // TODO: Format based on selected fiat currency
+                        '24h Max',
                         '\$${widget.cryptocurrency.high24h.toStringAsFixed(2)}',
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
-                        '24h Min', // TODO: Localize
-                        // TODO: Format based on selected fiat currency
+                        '24h Min',
                         '\$${widget.cryptocurrency.low24h.toStringAsFixed(2)}',
                       ),
                     ],
@@ -171,13 +227,11 @@ class _CryptoDetailState extends State<CryptoDetail> {
                 ),
               ),
               const SizedBox(height: 16),
-              // --- Chart Card ---
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      // Chart Type Selector Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -188,9 +242,15 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       ),
                       const SizedBox(height: 20),
                       // Chart Widget Area
-                      SizedBox(
-                        height: 350, // Adjust height as needed
-                        child: _buildSyncfusionChart(), // Use Syncfusion chart
+                      Column(
+                        children: [
+                          _buildChartRangeButtons(),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: 350,
+                            child: _buildSyncfusionChart(),
+                          ),
+                        ],
                       ),
                       // BUY and SELL Buttons
                       Row(
@@ -327,15 +387,18 @@ class _CryptoDetailState extends State<CryptoDetail> {
         edgeLabelPlacement: EdgeLabelPlacement.shift,
       ),
       primaryYAxis: NumericAxis(
+        minimum: _yMin,
+        maximum: _yMax,
+        interval: ((_yMax ?? 0) - (_yMin ?? 0)) / 5,
         labelFormat: '{value}',
         opposedPosition: false,
         majorTickLines: const MajorTickLines(size: 0),
         axisLine: const AxisLine(width: 0),
         numberFormat: NumberFormat.compactSimpleCurrency(
-          locale: 'en_US',
-        ), // e.g., $1.5K, $2M
+          name: selectedFiat.toUpperCase(),
+        ),
       ),
-      series: series, // Now the list type matches the parameter type
+      series: series,
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
