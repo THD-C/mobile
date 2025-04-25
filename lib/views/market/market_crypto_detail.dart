@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/coin.dart';
 import 'package:mobile/models/currency.dart';
@@ -8,6 +7,7 @@ import 'package:mobile/widgets/currency/fiat/fiat_currency_selector.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:mobile/dialogs/order_dialog.dart';
 
+import '../../models/coin_data.dart';
 import '../../models/historical_data.dart';
 import '../../tools/repositories/market_repository.dart';
 
@@ -39,11 +39,10 @@ class CryptoDetail extends StatefulWidget {
 
 class _CryptoDetailState extends State<CryptoDetail> {
   ChartType _selectedChartType = ChartType.line;
-  List<ChartDataPoint> _chartData = []; // Use a single list
-  // TooltipBehavior for chart interactions
+  List<ChartDataPoint> _chartData = [];
+  late CoinData _coinData;
   late TooltipBehavior _tooltipBehavior;
-
-  String selectedFiat = 'USD'; // Default fiat currency
+  String selectedFiat = 'USD';
   int chartDays= 1;
   double? _yMin;
   double? _yMax;
@@ -53,6 +52,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
     super.initState();
     _tooltipBehavior = TooltipBehavior(enable: true); // Initialize tooltip
     _getChartData();
+    _getCoinData();
   }
 
   // --- Random Data Generation (Adapted for Syncfusion) ---
@@ -97,6 +97,16 @@ class _CryptoDetailState extends State<CryptoDetail> {
       _chartData = dataPoints;
       _yMin = minY;
       _yMax = maxY;
+    });
+  }
+
+  void _getCoinData() async {
+    CoinData coinData = await MarketRepository.fetchDataForSingleCoin(
+        selectedFiat.toLowerCase(),
+        widget.cryptocurrency.id,
+    );
+    setState(() {
+      _coinData = coinData;
     });
   }
 
@@ -159,6 +169,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
 
   @override
   Widget build(BuildContext context) {
+    String currencySymbol = NumberFormat.compactSimpleCurrency(name: selectedFiat.toUpperCase()).currencySymbol;
     return Scaffold(
       appBar: AppBar(title: Text(widget.cryptocurrency.name)),
       body: Padding(
@@ -183,8 +194,8 @@ class _CryptoDetailState extends State<CryptoDetail> {
                           setState(() {
                             selectedFiat = currency.name;
                           });
-                          Logger().i('Selected Currency: ${currency.name}');
                           _getChartData();
+                          _getCoinData();
                         },
                       ),
                     ],
@@ -199,28 +210,28 @@ class _CryptoDetailState extends State<CryptoDetail> {
                     children: [
                       _buildInfoRow(
                         AppLocalizations.of(context).translate('market_price'),
-                        '\$${widget.cryptocurrency.currentPrice.toStringAsFixed(2)}',
+                        '$currencySymbol${_coinData.currentPrice}',
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
                         AppLocalizations.of(
                           context,
                         ).translate('market_change_24h'),
-                        '${widget.cryptocurrency.priceChangePercentage24h > 0 ? "+" : ""}${widget.cryptocurrency.priceChangePercentage24h.toStringAsFixed(2)}%',
+                        '${_coinData.priceChangePercentage24h > 0 ? "+" : ""}${_coinData.priceChangePercentage24h.toStringAsFixed(2)}%',
                         valueColor:
-                            widget.cryptocurrency.priceChangePercentage24h >= 0
+                          _coinData.priceChangePercentage24h >= 0
                                 ? Colors.green
                                 : Colors.red,
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
                         '24h Max',
-                        '\$${widget.cryptocurrency.high24h.toStringAsFixed(2)}',
+                        '$currencySymbol${_coinData.high24h}',
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
                         '24h Min',
-                        '\$${widget.cryptocurrency.low24h.toStringAsFixed(2)}',
+                        '$currencySymbol${_coinData.low24h}',
                       ),
                     ],
                   ),
