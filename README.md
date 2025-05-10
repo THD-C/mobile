@@ -37,6 +37,12 @@ for example:
 flutter emulators --launch Pixel_7
 ```
 
+...and then start the application in emulator
+
+```
+flutter run
+```
+
 ### Translations
 
 In [assets/lang](/assets/lang) are stored languages in `json` format.
@@ -91,4 +97,5 @@ Whet this status code is present following method should be used:
 ```
 logout(BuildContext context)
 ```
+
 This method takes context as a parameter to completely logout the user and redirects him to login page.

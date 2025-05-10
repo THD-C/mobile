@@ -121,7 +121,7 @@ class _AccountWalletsViewState extends State<AccountWalletsView> {
                       return ListTile(
                         title: Text('${wallet.currency}'),
                         subtitle: Text(
-                          '${AppLocalizations.of(context).translate('wallets_balance')}: ${wallet.value}',
+                          '${AppLocalizations.of(context).translate('wallets_balance')}: ${wallet.isCrypto ? wallet.value : wallet.value.toStringAsFixed(2)}',
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

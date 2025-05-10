@@ -28,7 +28,6 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     final orders = await OrderApiService().getOrdersByWalletId(
       widget.wallet.id,
     );
-    print(orders.toString());
     final ordersList = List<Map<String, dynamic>>.from(orders);
 
     // Fetch wallets and create an ID-to-name map
