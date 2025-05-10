@@ -79,14 +79,15 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
       // Show alert and close if no wallet found
       if (selectedWallet == null && mounted) {
         await Future.delayed(Duration.zero); // Let build() finish
+        final walletCurrency = widget.selectedFiat.toUpperCase();
         showDialog(
           // ignore: use_build_context_synchronously
           context: context,
           builder:
               (ctx) => AlertDialog(
                 title: const Text('Wallet Required'),
-                content: const Text(
-                  'You need to create a FIAT currency wallet first.',
+                content: Text(
+                  "You need to create the $walletCurrency (FIAT) currency wallet first.",
                 ),
                 actions: [
                   TextButton(
