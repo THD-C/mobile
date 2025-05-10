@@ -40,10 +40,10 @@ class CryptoDetail extends StatefulWidget {
 class _CryptoDetailState extends State<CryptoDetail> {
   ChartType _selectedChartType = ChartType.line;
   List<ChartDataPoint> _chartData = [];
-  late CoinData _coinData;
+  CoinData _coinData = CoinData.empty();
   late TooltipBehavior _tooltipBehavior;
   String selectedFiat = 'USD';
-  int chartDays= 1;
+  int chartDays = 1;
   double? _yMin;
   double? _yMax;
 
@@ -59,14 +59,16 @@ class _CryptoDetailState extends State<CryptoDetail> {
   void _getChartData() async {
     DateTime currentDay = DateTime.now().subtract(Duration(hours: 2));
     String end = currentDay.toIso8601String();
-    String start = currentDay.subtract(Duration(days: chartDays)).toIso8601String();
-    HistoricalData _fiatCurrencyList = await MarketRepository.fetchHistoricalDataForCoin(
-      selectedFiat.toLowerCase(),
-      widget.cryptocurrency.id,
-      start,
-      end,
-      true
-    );
+    String start =
+        currentDay.subtract(Duration(days: chartDays)).toIso8601String();
+    HistoricalData _fiatCurrencyList =
+        await MarketRepository.fetchHistoricalDataForCoin(
+          selectedFiat.toLowerCase(),
+          widget.cryptocurrency.id,
+          start,
+          end,
+          true,
+        );
 
     final List<ChartDataPoint> dataPoints = [];
 
@@ -102,8 +104,8 @@ class _CryptoDetailState extends State<CryptoDetail> {
 
   void _getCoinData() async {
     CoinData coinData = await MarketRepository.fetchDataForSingleCoin(
-        selectedFiat.toLowerCase(),
-        widget.cryptocurrency.id,
+      selectedFiat.toLowerCase(),
+      widget.cryptocurrency.id,
     );
     setState(() {
       _coinData = coinData;
@@ -137,13 +139,15 @@ class _CryptoDetailState extends State<CryptoDetail> {
     bool isSelected = chartDays == days;
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor: isSelected
-            ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-            : null,
+        backgroundColor:
+            isSelected
+                ? Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withOpacity(0.3)
+                : null,
         side: BorderSide(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.grey,
+          color:
+              isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -158,9 +162,10 @@ class _CryptoDetailState extends State<CryptoDetail> {
       child: Text(
         '$days D',
         style: TextStyle(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).textTheme.bodyLarge?.color,
+          color:
+              isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).textTheme.bodyLarge?.color,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
@@ -169,7 +174,10 @@ class _CryptoDetailState extends State<CryptoDetail> {
 
   @override
   Widget build(BuildContext context) {
-    String currencySymbol = NumberFormat.compactSimpleCurrency(name: selectedFiat.toUpperCase()).currencySymbol;
+    String currencySymbol =
+        NumberFormat.compactSimpleCurrency(
+          name: selectedFiat.toUpperCase(),
+        ).currencySymbol;
     return Scaffold(
       appBar: AppBar(title: Text(widget.cryptocurrency.name)),
       body: Padding(
@@ -187,9 +195,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
                       _buildTextRow('Fiat selection'),
                       const SizedBox(height: 8),
                       FiatCurrencySelector(
-                        selectedCurrency: Currency(
-                          name: selectedFiat,
-                        ),
+                        selectedCurrency: Currency(name: selectedFiat),
                         onCurrencySelected: (currency) {
                           setState(() {
                             selectedFiat = currency.name;
@@ -219,7 +225,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
                         ).translate('market_change_24h'),
                         '${_coinData.priceChangePercentage24h > 0 ? "+" : ""}${_coinData.priceChangePercentage24h.toStringAsFixed(2)}%',
                         valueColor:
-                          _coinData.priceChangePercentage24h >= 0
+                            _coinData.priceChangePercentage24h >= 0
                                 ? Colors.green
                                 : Colors.red,
                       ),
@@ -257,10 +263,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
                         children: [
                           _buildChartRangeButtons(),
                           const SizedBox(height: 16),
-                          SizedBox(
-                            height: 350,
-                            child: _buildSyncfusionChart(),
-                          ),
+                          SizedBox(height: 350, child: _buildSyncfusionChart()),
                         ],
                       ),
                       // BUY and SELL Buttons
@@ -363,9 +366,7 @@ class _CryptoDetailState extends State<CryptoDetail> {
         LineSeries<ChartDataPoint, DateTime>(
           dataSource: _chartData,
           xValueMapper: (ChartDataPoint data, _) => data.timestamp,
-          yValueMapper:
-              (ChartDataPoint data, _) =>
-                  data.high,
+          yValueMapper: (ChartDataPoint data, _) => data.high,
           name: widget.cryptocurrency.name,
           color: Theme.of(context).colorScheme.primary,
           width: 2,

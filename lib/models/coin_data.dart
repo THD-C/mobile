@@ -23,6 +23,19 @@ class CoinData {
     required this.totalVolume,
   });
 
+  // Named constructor providing default values.
+  CoinData.empty()
+    : id = '',
+      symbol = '',
+      name = '',
+      currentPrice = 0.0,
+      high24h = 0.0,
+      low24h = 0.0,
+      priceChange24h = 0.0,
+      priceChangePercentage24h = 0.0,
+      marketCap = 0.0,
+      totalVolume = 0.0;
+
   factory CoinData.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
     final marketData = data['market_data'];
@@ -34,8 +47,11 @@ class CoinData {
       currentPrice: (marketData['current_price'] as num).toDouble(),
       high24h: (marketData['high_24h'] as num).toDouble(),
       low24h: (marketData['low_24h'] as num).toDouble(),
-      priceChange24h: (marketData['price_change_24h_in_currency'] as num).toDouble(),
-      priceChangePercentage24h: (marketData['price_change_percentage_24h_in_currency'] as num).toDouble(),
+      priceChange24h:
+          (marketData['price_change_24h_in_currency'] as num).toDouble(),
+      priceChangePercentage24h:
+          (marketData['price_change_percentage_24h_in_currency'] as num)
+              .toDouble(),
       marketCap: (marketData['market_cap'] as num).toDouble(),
       totalVolume: (marketData['total_volume'] as num).toDouble(),
     );
