@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:mobile/config/app_config.dart';
 import 'package:mobile/l10n/app_localizations.dart';
 import 'package:mobile/models/currency.dart';
 import 'package:mobile/models/wallet.dart';
@@ -17,7 +18,7 @@ class AddWalletDialog extends StatefulWidget {
 class _AddWalletDialogState extends State<AddWalletDialog> {
   late final TextEditingController currencyController = TextEditingController();
 
-  Currency? _selectedCurrency;
+  Currency? _selectedCurrency = AppConfig().defaultCurrency;
   late List<Currency> availableCurrencies = [];
 
   @override

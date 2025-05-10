@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:mobile/tools/api_servicer/api_wallet.dart';
 import 'package:mobile/tools/api_servicer/api_order.dart';
 
@@ -106,12 +107,11 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   void _onAmountChanged() {
     if (_isUpdatingFromNominal) return;
 
-    final amount = double.tryParse(amountController.text);
+    double? amount = double.tryParse(amountController.text);
     if (amount != null) {
       _isUpdatingFromAmount = true;
       double specificPrice;
-      try
-      {
+      try {
         specificPrice = double.parse(specificPriceController.text);
       } catch (e) {
         specificPrice = 1;
@@ -160,8 +160,21 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
   bool get isFormValid {
     if (orderType == 'pending') {
       final value = double.tryParse(specificPriceController.text);
-      if (value == null || value <= 0) return false;
+      if (value == null || value <= 0) {
+        return false;
+      }
     }
+
+    if (selectedWallet == null) return false;
+
+    final double walletBalance =
+        double.tryParse(selectedWallet!['value'].toString()) ?? 0;
+    final double orderAmount = double.tryParse(amountController.text) ?? 0;
+
+    if (orderAmount <= 0 || walletBalance < orderAmount) {
+      return false;
+    }
+
     return true;
   }
 
@@ -261,6 +274,10 @@ class _OrderDialogWidgetState extends State<OrderDialogWidget> {
                         currencyTarget: widget.cryptoName.toLowerCase(),
                         currencyUsedWalletId: fiatWalletId,
                       );
+
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('Order placed')));
 
                       if (mounted) Navigator.pop(context);
                     } catch (e) {
