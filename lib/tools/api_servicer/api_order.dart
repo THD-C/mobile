@@ -127,6 +127,12 @@ class OrderApiService {
 
   /// Handle HTTP response uniformly
   static Map<String, dynamic> _handleResponse(http.Response response) {
+    final responseBody = response.body.trim();
+    if (responseBody.isEmpty) {
+      // If the response is empty, return a default payload or throw an exception with a more descriptive message.
+      return {};
+    }
+
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
