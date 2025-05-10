@@ -22,7 +22,7 @@ class PaymentApiService extends apiCalls {
       final response = await http.post(
         Uri.parse(_baseUrl),
         headers: {
-          'Origin': '$baseURL/$_appLanguageCode',
+          'Origin': '$baseURL/$_appLanguageCode/',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },

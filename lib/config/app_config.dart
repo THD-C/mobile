@@ -19,7 +19,7 @@ class AppConfig {
 
   String get userApiUrl => '$_apiBaseUrl/user';
 
-  String get paymentApiUrl => '$_apiBaseUrl/payments';
+  String get paymentApiUrl => '$_apiBaseUrl/payments/';
 
   String get portfolioApiUrl => '$_apiBaseUrl/statistics/portfolio-diversity';
 
